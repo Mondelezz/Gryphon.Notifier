@@ -64,7 +64,4 @@ public class AutoInsuranceProduct : EntityBase, IEntityState
     /// Класс автомобиля
     /// </summary>
     public required VehicleInsuranceClass VehicleInsuranceClass { get; set; }
-
-
-
 }
