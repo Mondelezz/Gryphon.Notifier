@@ -7,7 +7,7 @@ namespace Infrastructure.DbContexts;
 
 public abstract partial class BaseDbContext : DbContext
 {
-    public DbSet<InsuranceProduct> InsuranceProduct { get; set; }
+    public DbSet<InsuranceProduct> InsuranceProducts { get; set; }
 
 
     public static void MapEnums(
