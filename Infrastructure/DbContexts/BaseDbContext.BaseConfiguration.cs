@@ -1,4 +1,5 @@
 using Domain.Common;
+using Infrastructure.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Npgsql;
@@ -11,9 +12,10 @@ public abstract partial class BaseDbContext(DbContextOptions options) : DbContex
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
         MapEnums(modelBuilder);
         EntityDateConfigure(modelBuilder);
+
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(BaseConfiguration<>).Assembly);
     }
 
     private static void EntityDateConfigure(ModelBuilder modelBuilder)
