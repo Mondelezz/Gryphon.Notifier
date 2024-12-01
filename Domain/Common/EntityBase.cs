@@ -1,4 +1,4 @@
-﻿namespace Domain.Common;
+namespace Domain.Common;
 
 public class EntityBase : IEntityId, IEntityDate
 {

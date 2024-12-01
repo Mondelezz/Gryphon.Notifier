@@ -1,5 +1,6 @@
 using Microsoft.OpenApi.Models;
 using Infrastructure;
+using Application;
 
 namespace API;
 
@@ -29,6 +30,7 @@ internal static class HostingExtensions
             .AddJsonFile(Path.Combine("appsettings.json"), optional: false, reloadOnChange: true);
 
         builder.Services.RegisterInfrastructureLayer(builder.Configuration, builder.Environment);
+        builder.Services.RegisterApplicationLayer();
 
         return builder;
     }

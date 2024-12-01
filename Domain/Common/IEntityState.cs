@@ -1,8 +1,9 @@
-﻿using Domain.Enums;
-
 namespace Domain.Common;
 
 public interface IEntityState
 {
-    public State State { get; set; }
+    /// <summary>
+    /// Удалена
+    /// </summary>
+    public bool IsDeleted { get; set; }
 }
