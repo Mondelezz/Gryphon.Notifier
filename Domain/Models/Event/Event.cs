@@ -21,6 +21,16 @@ public class Event : EntityBase, IEntityState
     public required DateTime DateEvent { get; set; }
 
     /// <summary>
+    /// Цена события ( услуга / тариф )
+    /// </summary>
+    public decimal? Price { get; set; }
+
+    /// <summary>
+    /// Повторяющееся событие в определённую дату
+    /// </summary> 
+    public bool? IsIterative { get; set; }
+
+    /// <summary>
     /// Группа
     /// </summary>
     public GroupEvent? GroupEvent { get; set; }
