@@ -1,5 +1,4 @@
 using Application.Common;
-using Application.Repository.Abstraction.Command;
 using Mediator;
 
 namespace Application.Features.EventFeatures.Command;
@@ -10,7 +9,7 @@ public static partial class EventCreate
         RequestDto RequestDto,
         long CurrentUserId) : ICommandRequest<long>;
 
-    public class Handler(ICommandEventRepository commandEventRepository) : IRequestHandler<Command, long>
+    public class Handler() : IRequestHandler<Command, long>
     {
         public ValueTask<long> Handle(Command request, CancellationToken cancellationToken)
         {

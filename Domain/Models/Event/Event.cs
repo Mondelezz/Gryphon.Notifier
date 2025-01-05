@@ -11,6 +11,11 @@ public class Event : EntityBase, IEntityState
     public required string Name { get; set; }
 
     /// <summary>
+    /// Описание события
+    /// </summary>
+    public string? Description { get; set; }
+
+    /// <summary>
     /// Важность события
     /// </summary>
     public required Importance Importance { get; set; }
@@ -21,7 +26,7 @@ public class Event : EntityBase, IEntityState
     public required DateTime DateEvent { get; set; }
 
     /// <summary>
-    /// Цена события ( услуга / тариф )
+    /// Стоимость события ( услуга / тариф )
     /// </summary>
     public decimal? Price { get; set; }
 

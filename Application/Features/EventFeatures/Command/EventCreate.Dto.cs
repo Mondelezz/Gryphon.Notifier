@@ -8,6 +8,7 @@ public static partial class EventCreate
 
     public record EventDto(
         string Name,
+        string? Description,
         Importance Importance,
         DateTime DateEvent,
         decimal? Price,
