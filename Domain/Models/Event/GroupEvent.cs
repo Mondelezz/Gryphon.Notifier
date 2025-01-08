@@ -17,5 +17,13 @@ public class GroupEvent : EntityBase, IEntityState
     /// </summary>
     public IList<Event> Events { get; set; } = [];
 
+    /// <summary>
+    /// Идентификатор пользователя который создал  группу для событий
+    /// </summary>
+    public required string UserId { get; set; }
+
+    /// <summary>
+    /// Сущность удалена
+    /// </summary>
     public bool IsDeleted { get; set; }
 }

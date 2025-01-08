@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Configuration;
 
-internal class GroupEventConfiguration : BaseConfiguration<GroupEvent>
+internal sealed class GroupEventConfiguration : BaseConfiguration<GroupEvent>
 {
     public override void Configure(EntityTypeBuilder<GroupEvent> builder)
     {

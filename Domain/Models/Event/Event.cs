@@ -42,5 +42,10 @@ public class Event : EntityBase, IEntityState
 
     public long? GroupEventId { get; set; }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public required string UserId { get; set; }
+
     public bool IsDeleted { get; set; }
 }
