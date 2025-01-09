@@ -1,5 +1,7 @@
+using Application.Exceptions;
 using System.Net;
 using System.Text.Json;
+using NullReferenceException = Application.Exceptions.NullReferenceException;
 
 namespace API;
 
@@ -12,6 +14,10 @@ public class GlobalErrorHandlingMiddleware(RequestDelegate next, ILogger<GlobalE
             await next(context);
         }
         catch (NullReferenceException ex)
+        {
+            await HandleExceptionAsync(HttpStatusCode.NotFound, context, ex);
+        }
+        catch (EntityNotFoundException ex)
         {
             await HandleExceptionAsync(HttpStatusCode.NotFound, context, ex);
         }

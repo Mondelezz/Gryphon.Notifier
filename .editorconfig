@@ -27,6 +27,7 @@ dotnet_style_prefer_compound_assignment = true:suggestion
 dotnet_style_prefer_simplified_interpolation = true:suggestion
 dotnet_style_namespace_match_folder = true:suggestion
 dotnet_code_quality_unused_parameters = all:suggestion
+dotnet_diagnostic.CA2201.severity = none
 
 [*.json]
 indent_size = 4

@@ -3,7 +3,6 @@ using Infrastructure.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Npgsql;
-using NullReferenceException = Application.Exceptions.NullReferenceException;
 
 namespace Infrastructure.DbContexts;
 

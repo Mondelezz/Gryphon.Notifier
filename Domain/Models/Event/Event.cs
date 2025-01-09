@@ -43,7 +43,7 @@ public class Event : EntityBase, IEntityState
     public long? GroupEventId { get; set; }
 
     /// <summary>
-    /// 
+    /// Идентификатор пользователя
     /// </summary>
     public required string UserId { get; set; }
 

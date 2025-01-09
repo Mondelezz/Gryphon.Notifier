@@ -1,9 +1,13 @@
 using Application.Common;
+using Domain.Models.Event;
 using Infrastructure.DbContexts;
 using Mediator;
 
 namespace Application.Features.EventFeatures.Command;
 
+/// <summary>
+/// Отвечает за создание события
+/// </summary>
 public static partial class EventCreate
 {
     public record Command(
@@ -12,14 +16,17 @@ public static partial class EventCreate
 
     public class Handler(CommandDbContext commandDbContext) : IRequestHandler<Command, long>
     {
-        public ValueTask<long> Handle(Command request, CancellationToken cancellationToken)
+        public async ValueTask<long> Handle(Command request, CancellationToken cancellationToken)
         {
-            
-        }
+            Event eventDb = Mapper.MapEventDtoToEvent(
+                request.RequestDto.EventDto,
+                request.CurrentUserId);
 
-        private async Task CreateEventAsync()
-        {
+            await commandDbContext.Events.AddAsync(eventDb, cancellationToken);
 
+            await commandDbContext.SaveChangesAsync(cancellationToken);
+
+            return eventDb.Id;
         }
     }
 }

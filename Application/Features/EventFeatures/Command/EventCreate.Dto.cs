@@ -12,9 +12,5 @@ public static partial class EventCreate
         Importance Importance,
         DateTime DateEvent,
         decimal? Price,
-        bool? IsIterative,
-        GroupEventDto? GroupEventDto);
-
-    public record GroupEventDto(
-        long? GroupEventId);
+        bool? IsIterative);
 }
