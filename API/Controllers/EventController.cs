@@ -12,15 +12,15 @@ namespace API.Controllers;
 public class EventController(IMediator mediator) : ControllerBase
 {
     /// <summary>
-    /// Создание событие
+    /// Создание или редактирование события
     /// </summary>
     /// <param name="requestDto">Событие</param>
     /// <param name="eventId">Идентификатор события</param>
     /// <param name="currentUserId">Идентификатор текущего пользователя</param>
     /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>Идентификатор созданной сущности</returns>
-    [HttpPost("create-event")]
-    public async Task<ActionResult<long>> CreateEvent(
+    [HttpPost("create-or-update-event")]
+    public async Task<ActionResult<long>> CreateOrUpdateEvent(
         EventCreateOrUpdate.RequestDto requestDto,
         long? eventId,
         string currentUserId,
