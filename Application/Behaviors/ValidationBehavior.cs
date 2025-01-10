@@ -10,7 +10,10 @@ public sealed class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<
 
     public ValidationBehavior(IEnumerable<IValidator<TRequest>> validators) => _validators = validators;
 
-    public async ValueTask<TResponse> Handle(TRequest request, CancellationToken cancellationToken, MessageHandlerDelegate<TRequest, TResponse> next)
+    public async ValueTask<TResponse> Handle(
+        TRequest request,
+        CancellationToken cancellationToken,
+        MessageHandlerDelegate<TRequest, TResponse> next)
     {
         ArgumentNullException.ThrowIfNull(next);
 

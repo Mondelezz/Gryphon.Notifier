@@ -2,7 +2,7 @@ using Domain.Enums;
 
 namespace Application.Features.EventFeatures.Command;
 
-public static partial class EventCreate
+public static partial class EventCreateOrUpdate
 {
     public record RequestDto(EventDto EventDto);
 
@@ -12,5 +12,5 @@ public static partial class EventCreate
         Importance Importance,
         DateTime DateEvent,
         decimal? Price,
-        bool? IsIterative);
+        bool IsIterative);
 }

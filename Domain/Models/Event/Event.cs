@@ -33,7 +33,7 @@ public class Event : EntityBase, IEntityState
     /// <summary>
     /// Повторяющееся событие в определённую дату
     /// </summary> 
-    public bool? IsIterative { get; set; }
+    public bool IsIterative { get; set; }
 
     /// <summary>
     /// Группа

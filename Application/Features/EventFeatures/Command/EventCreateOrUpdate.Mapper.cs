@@ -3,7 +3,7 @@ using Riok.Mapperly.Abstractions;
 
 namespace Application.Features.EventFeatures.Command;
 
-public static partial class EventCreate
+public static partial class EventCreateOrUpdate
 {
     [Mapper]
     public static partial class Mapper
