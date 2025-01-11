@@ -11,10 +11,10 @@ internal static class HostingExtensions
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(o =>
-        #region SwaggerDoc
+        {
             o.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title = "DesignedInsuranceProduct",
+                Title = "Gryphon",
                 Version = "v1",
                 Contact = new OpenApiContact
                 {
@@ -22,8 +22,17 @@ internal static class HostingExtensions
                     Email = @"pankov.egor26032005@yandex.ru",
                     Name = "Mondelezz"
                 },
-            }));
-        #endregion
+            });
+
+            string[] xmlFiles = Directory.GetFiles(AppContext.BaseDirectory, "*.xml", SearchOption.AllDirectories);
+
+            foreach (string xmlFile in xmlFiles)
+            {
+                o.IncludeXmlComments(xmlFile, true);
+            };
+
+
+        });
 
         builder.Configuration
             .SetBasePath(AppContext.BaseDirectory)
