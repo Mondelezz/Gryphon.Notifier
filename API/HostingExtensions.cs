@@ -10,9 +10,9 @@ internal static class HostingExtensions
     {
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen(o =>
+        builder.Services.AddSwaggerGen(options =>
         {
-            o.SwaggerDoc("v1", new OpenApiInfo
+            options.SwaggerDoc("v1", new OpenApiInfo
             {
                 Title = "Gryphon",
                 Version = "v1",
@@ -28,8 +28,10 @@ internal static class HostingExtensions
 
             foreach (string xmlFile in xmlFiles)
             {
-                o.IncludeXmlComments(xmlFile, true);
+                options.IncludeXmlComments(xmlFile, true);
             };
+
+            options.CustomSchemaIds(type => type.FullName?.Replace("+", "_"));
         });
 
         builder.Configuration

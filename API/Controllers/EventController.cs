@@ -41,4 +41,5 @@ public class EventController(IMediator mediator) : ControllerBase
         long eventId,
         CancellationToken cancellationToken = default) => await mediator.Send(
             new EventGet.Query(currentUserId, eventId), cancellationToken);
+
 }

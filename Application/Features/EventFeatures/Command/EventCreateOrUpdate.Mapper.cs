@@ -8,7 +8,7 @@ public static partial class EventCreateOrUpdate
     [Mapper]
     public static partial class Mapper
     {
-        public static Event Map(EventCreateOrUpdateDto source, string userId) => new()
+        public static Event Map(EventDto source, string userId) => new()
         {
             Name = source.Name,
             Description = source.Description,

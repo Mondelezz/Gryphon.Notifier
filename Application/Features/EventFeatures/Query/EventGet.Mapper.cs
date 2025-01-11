@@ -8,7 +8,7 @@ public static partial class EventGet
     [Mapper]
     public static partial class Mapper
     {
-        public static EventGetDto Map(Event source) => new(
+        public static EventDto Map(Event source) => new(
             source.Id,
             source.Name,
             source.Description,

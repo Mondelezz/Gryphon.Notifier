@@ -33,7 +33,7 @@ public static partial class EventCreateOrUpdate
 
         private async ValueTask<long> CreateEventAsync(Command request, CancellationToken cancellationToken)
         {
-            Event eventDb = Mapper.Map(request.RequestDto.EventCreateOrUpdateDto, request.CurrentUserId);
+            Event eventDb = Mapper.Map(request.RequestDto.EventDto, request.CurrentUserId);
 
             await commandDbContext.Events.AddAsync(eventDb, cancellationToken);
             await commandDbContext.SaveChangesAsync(cancellationToken);

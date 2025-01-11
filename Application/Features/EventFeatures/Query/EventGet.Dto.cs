@@ -3,9 +3,9 @@ namespace Application.Features.EventFeatures.Query;
 
 public static partial class EventGet
 {
-    public record ResponseDto(EventGetDto EventGetDto);
+    public record ResponseDto(EventDto EventDto);
 
-    public record EventGetDto(
+    public record EventDto(
         long EventId,
         string Name,
         string? Description,

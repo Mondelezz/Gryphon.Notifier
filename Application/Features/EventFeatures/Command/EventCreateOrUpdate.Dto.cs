@@ -4,9 +4,9 @@ namespace Application.Features.EventFeatures.Command;
 
 public static partial class EventCreateOrUpdate
 {
-    public record RequestDto(EventCreateOrUpdateDto EventCreateOrUpdateDto);
+    public record RequestDto(EventDto EventDto);
 
-    public record EventCreateOrUpdateDto(
+    public record EventDto(
         string Name,
         string? Description,
         Importance Importance,
