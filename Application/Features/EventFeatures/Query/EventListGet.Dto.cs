@@ -21,9 +21,7 @@ public static partial class EventListGet
 
     public record RequestFilter(
         string? SearchTermFilter = default,
-        DateTime? DateEventFilter = default,
-        string? NameFilter = default,
-        decimal? PriceFilter = default);
+        bool? IndicatedPriceFilter = default);
 
     public enum Sorting
     {

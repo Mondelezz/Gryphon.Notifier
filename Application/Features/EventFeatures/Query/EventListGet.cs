@@ -3,6 +3,7 @@ using Domain.Models.Event;
 using Infrastructure.DbContexts;
 using Mediator;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Application.Features.EventFeatures.Query;
 
@@ -11,12 +12,10 @@ public static partial class EventListGet
     public record Query(
             string UserId,
             int Offset,
+            int SkipCount,
             Sorting Sorting,
             bool SortByDescending,
-            RequestFilter? Filter) : IQueryRequest<ResponseDto>
-    {
-        public int SkipCount { get; set; }
-    }
+            RequestFilter? Filter) : IQueryRequest<ResponseDto>;
 
     public class Handler(QueryDbContext queryDbContext) : IRequestHandler<Query, ResponseDto>
     {
@@ -38,7 +37,7 @@ public static partial class EventListGet
 
             if (request.SkipCount >= totalCount)
             {
-                request.SkipCount = totalCount - 1;
+                request = request with { SkipCount = totalCount - 1 };
             }
 
             Sort(request.Sorting, ref query, request.SortByDescending);
@@ -60,22 +59,14 @@ public static partial class EventListGet
                 return;
             }
 
-            if (filter.PriceFilter is not null)
+            if (filter.IndicatedPriceFilter.HasValue)
             {
-                query = query.Where(e => e.Price > 0);
+                query = filter.IndicatedPriceFilter.Value
+                    ? query.Where(e => e.Price > 0) // Фильтр для событий с указанной ценой
+                    : query.Where(e => e.Price == null || e.Price == 0); // Фильтр для событий без указанной цены
             }
 
-            if (filter.NameFilter is not null)
-            {
-                query = query.Where(e => e.Name == filter.NameFilter);
-            }
-
-            if (filter.DateEventFilter is not null)
-            {
-                query = query.Where(e => e.DateEvent == filter.DateEventFilter);
-            }
-
-            if (filter.SearchTermFilter is not null)
+            if (!string.IsNullOrEmpty(filter.SearchTermFilter))
             {
                 query = query.Where(e =>
                     EF.Functions.ILike(e.Name, $"%{filter.SearchTermFilter}%") ||
@@ -83,37 +74,20 @@ public static partial class EventListGet
             }
         }
 
-        private static void Sort(
-            Sorting sorting,
-            ref IQueryable<Event> query,
-            bool SortByDescending)
-        {
-            switch (sorting)
+        private static void Sort(Sorting sorting, ref IQueryable<Event> query, bool sortByDescending) =>
+
+            query = (sorting, sortByDescending) switch
             {
-                case Sorting.DateEvent when SortByDescending:
-                    query = query.OrderByDescending(e => e.DateEvent);
-                    break;
-                case Sorting.DateEvent:
-                    query = query.OrderBy(e => e.DateEvent);
-                    break;
+                (Sorting.DateEvent, true) => query.OrderByDescending(e => e.DateEvent),
+                (Sorting.DateEvent, false) => query.OrderBy(e => e.DateEvent),
 
-                case Sorting.Importance when SortByDescending:
-                    query = query.OrderByDescending(e => e.Importance);
-                    break;
-                case Sorting.Importance:
-                    query = query.OrderBy(e => e.Importance);
-                    break;
+                (Sorting.Importance, true) => query.OrderByDescending(e => e.Importance),
+                (Sorting.Importance, false) => query.OrderBy(e => e.Importance),
 
-                case Sorting.Price when SortByDescending:
-                    query = query.OrderByDescending(e => e.Price);
-                    break;
-                case Sorting.Price when SortByDescending:
-                    query = query.OrderBy(e => e.Price);
-                    break;
-                default:
-                    query = query.OrderByDescending(e => e.CreateDate);
-                    break;
-            }
-        }
+                (Sorting.Price, true) => query.OrderByDescending(e => e.Price).ThenByDescending(e => e.Price == null || e.Price == 0),
+                (Sorting.Price, false) => query.OrderBy(e => e.Price).ThenBy(e => e.Price == null || e.Price == 0),
+
+                _ => query.OrderByDescending(e => e.CreateDate) // default
+            };
     }
 }

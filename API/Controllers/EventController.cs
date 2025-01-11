@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Application.Features.EventFeatures.Command;
 using Mediator;
 using Application.Features.EventFeatures.Query;
+using System.ComponentModel.DataAnnotations;
 
 namespace API.Controllers;
 
@@ -41,5 +42,32 @@ public class EventController(IMediator mediator) : ControllerBase
         long eventId,
         CancellationToken cancellationToken = default) => await mediator.Send(
             new EventGet.Query(currentUserId, eventId), cancellationToken);
+
+    /// <summary>
+    /// Получение списка событий с возможностью филтрации, сортировки и пагинации
+    /// </summary>
+    /// <param name="currentUserId">Идентификатор текущего пользователя</param>
+    /// <param name="offset">Количество элементов на странице</param>
+    /// <param name="skipCount">Количество элементов для пропуска</param>
+    /// <param name="sorting">Критерий сортировки.</param>
+    /// <param name="sortByDescending">Флаг для сортировки по убыванию.</param>
+    /// <param name="requestFilter">Фильтр для поиска организаций.</param>
+    /// <param name="cancellationToken">Токен отмены.</param>
+    /// <returns></returns>
+    [HttpGet]
+    public async Task<EventListGet.ResponseDto> GetEventListAsync(
+        string currentUserId,
+        [FromQuery][Range(1, 100)] int offset = 10,
+        [FromQuery][Range(0, int.MaxValue)] int skipCount = 10,
+        [FromQuery] EventListGet.Sorting sorting = EventListGet.Sorting.DateEvent,
+        [FromQuery] bool sortByDescending = false,
+        [FromQuery] EventListGet.RequestFilter? requestFilter = default,
+        CancellationToken cancellationToken = default) => await mediator.Send(
+            new EventListGet.Query(
+                currentUserId,
+                offset, skipCount,
+                sorting,
+                sortByDescending,
+                requestFilter), cancellationToken);
 
 }
