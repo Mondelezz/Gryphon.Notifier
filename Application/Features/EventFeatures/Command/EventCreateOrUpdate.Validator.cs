@@ -17,15 +17,15 @@ public static partial class EventCreateOrUpdate
         {
             public ValidatorRequestDto()
             {
-                RuleFor(request => request.EventDto)
+                RuleFor(request => request.EventCreateOrUpdateDto)
                     .NotNull()
-                    .SetValidator(new ValidatorEventDto());
+                    .SetValidator(new ValidatorEventCreateOrUpdateDto());
             }
         }
 
-        public class ValidatorEventDto : AbstractValidator<EventDto>
+        public class ValidatorEventCreateOrUpdateDto : AbstractValidator<EventCreateOrUpdateDto>
         {
-            public ValidatorEventDto()
+            public ValidatorEventCreateOrUpdateDto()
             {
                 RuleFor(o => o.Price)
                     .InclusiveBetween(0, decimal.MaxValue)

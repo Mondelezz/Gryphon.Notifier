@@ -33,7 +33,7 @@ public static partial class EventCreateOrUpdate
 
         private async ValueTask<long> CreateEventAsync(Command request, CancellationToken cancellationToken)
         {
-            Event eventDb = Mapper.MapEventDtoToEvent(request.RequestDto.EventDto, request.CurrentUserId);
+            Event eventDb = Mapper.Map(request.RequestDto.EventCreateOrUpdateDto, request.CurrentUserId);
 
             await commandDbContext.Events.AddAsync(eventDb, cancellationToken);
             await commandDbContext.SaveChangesAsync(cancellationToken);
@@ -46,7 +46,7 @@ public static partial class EventCreateOrUpdate
             Event eventDb = await commandDbContext.Events
                 .Where(e => e.Id == request.EventId && e.UserId == request.CurrentUserId)
                 .FirstOrDefaultAsync(cancellationToken)
-                ?? throw new EntityNotFoundException(request.EventId!.Value, "Event");
+                ?? throw new EntityNotFoundException(request.EventId!.Value, request.CurrentUserId, "event", "user");
 
             commandDbContext.Update(eventDb);
 

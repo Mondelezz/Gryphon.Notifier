@@ -30,8 +30,6 @@ internal static class HostingExtensions
             {
                 o.IncludeXmlComments(xmlFile, true);
             };
-
-
         });
 
         builder.Configuration
