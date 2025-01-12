@@ -13,6 +13,8 @@ public static partial class EventListGet
         Importance Importance,
         decimal? Price,
         DateTime DateEvent,
+        DateTime CreateDate,
+        DateTime UpdateDate,
         GroupEventDto? GroupEventDto);
 
     public record GroupEventDto(
@@ -25,6 +27,7 @@ public static partial class EventListGet
 
     public enum Sorting
     {
+        Id,
         DateEvent,
         Importance,
         Price

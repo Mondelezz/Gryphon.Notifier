@@ -16,6 +16,8 @@ public static partial class EventListGet
                 eventdB.Importance,
                 eventdB.Price,
                 eventdB.DateEvent,
+                eventdB.CreateDate,
+                eventdB.UpdateDate,
                 eventdB.GroupEvent != null
                 ? Map(eventdB.GroupEvent)
                 : null))

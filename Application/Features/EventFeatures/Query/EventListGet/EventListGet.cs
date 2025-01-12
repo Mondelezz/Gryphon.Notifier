@@ -10,6 +10,7 @@ public static partial class EventListGet
 {
     public record Query(
             string UserId,
+            long? GroupEventId,
             int Offset,
             int SkipCount,
             Sorting Sorting,
@@ -22,7 +23,7 @@ public static partial class EventListGet
         {
             IQueryable<Event> query = queryDbContext.Events
                 .Include(e => e.GroupEvent)
-                .Where(e => e.UserId == request.UserId)
+                .Where(e => e.UserId == request.UserId && (request.GroupEventId == 0 || (e.GroupEventId.HasValue && e.GroupEventId.Value == request.GroupEventId!.Value)))
                 .AsQueryable();
 
             ApplyFilters(request.Filter, ref query);
@@ -79,6 +80,9 @@ public static partial class EventListGet
 
             query = (sorting, sortByDescending) switch
             {
+                (Sorting.Id, true) => query.OrderByDescending(e => e.Id),
+                (Sorting.Id, false) => query.OrderBy(e => e.Id),
+
                 (Sorting.DateEvent, true) => query.OrderByDescending(e => e.DateEvent),
                 (Sorting.DateEvent, false) => query.OrderBy(e => e.DateEvent),
 

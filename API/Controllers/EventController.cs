@@ -48,6 +48,7 @@ public class EventController(IMediator mediator) : ControllerBase
     /// Получение списка событий с возможностью филтрации, сортировки и пагинации
     /// </summary>
     /// <param name="currentUserId">Идентификатор текущего пользователя</param>
+    /// <param name="groupEventId">Идентификатор группы, в которую включены запрашиваемые события</param>
     /// <param name="offset">Количество элементов на странице</param>
     /// <param name="skipCount">Количество элементов для пропуска</param>
     /// <param name="sorting">Критерий сортировки.</param>
@@ -58,6 +59,7 @@ public class EventController(IMediator mediator) : ControllerBase
     [HttpGet]
     public async Task<EventListGet.ResponseDto> GetEventListAsync(
         string currentUserId,
+        long groupEventId,
         [FromQuery][Range(1, 100)] int offset = 10,
         [FromQuery][Range(0, int.MaxValue)] int skipCount = 10,
         [FromQuery] EventListGet.Sorting sorting = EventListGet.Sorting.DateEvent,
@@ -66,6 +68,7 @@ public class EventController(IMediator mediator) : ControllerBase
         CancellationToken cancellationToken = default) => await mediator.Send(
             new EventListGet.Query(
                 currentUserId,
+                groupEventId,
                 offset, skipCount,
                 sorting,
                 sortByDescending,
