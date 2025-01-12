@@ -31,9 +31,17 @@ public static partial class EventCreateOrUpdate
                     .InclusiveBetween(0, decimal.MaxValue)
                     .WithMessage($"Значение должно быть в диапазоне от 0 до {decimal.MaxValue} .");
 
+                RuleFor(o => o.Name)
+                    .MinimumLength(1)
+                        .WithMessage($"Минимальная длина названия события 1 символ")
+                    .MaximumLength(60)
+                        .WithMessage($"Максимальная длина названия события 60 символов");
+
                 RuleFor(o => o.Description)
+                    .MinimumLength(1)
+                        .WithMessage($"Минимальная длина описания 1 символ")
                     .MaximumLength(300)
-                    .WithMessage($"Максимальная длина описания должна быть 300 символов");
+                        .WithMessage($"Максимальная длина описания 300 символов");
 
                 RuleFor(date => date.DateEvent)
                     .Must(date => date > DateTime.UtcNow)

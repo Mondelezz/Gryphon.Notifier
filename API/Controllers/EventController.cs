@@ -21,7 +21,7 @@ public class EventController(IMediator mediator) : ControllerBase
     /// <param name="eventId">Идентификатор события</param>
     /// <param name="currentUserId">Идентификатор текущего пользователя</param>
     /// <param name="cancellationToken">Токен отмены</param>
-    /// <returns>Идентификатор созданной сущности</returns>
+    /// <returns>Идентификатор созданной или обновлённой сущности</returns>
     [HttpPost("create-or-update-event")]
     public async Task<ActionResult<long>> CreateOrUpdateEventAsync(
         EventCreateOrUpdate.RequestDto requestDto,
