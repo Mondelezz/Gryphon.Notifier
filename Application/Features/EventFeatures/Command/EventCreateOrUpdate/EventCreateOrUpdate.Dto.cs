@@ -1,6 +1,6 @@
 using Domain.Enums;
 
-namespace Application.Features.EventFeatures.Command;
+namespace Application.Features.EventFeatures.Command.EventCreateOrUpdate;
 
 public static partial class EventCreateOrUpdate
 {

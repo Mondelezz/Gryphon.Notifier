@@ -3,9 +3,8 @@ using Domain.Models.Event;
 using Infrastructure.DbContexts;
 using Mediator;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
-namespace Application.Features.EventFeatures.Query;
+namespace Application.Features.EventFeatures.Query.EventListGet;
 
 public static partial class EventListGet
 {

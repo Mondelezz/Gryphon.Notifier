@@ -1,7 +1,7 @@
 using Domain.Models.Event;
 using Riok.Mapperly.Abstractions;
 
-namespace Application.Features.EventFeatures.Command;
+namespace Application.Features.EventFeatures.Command.EventCreateOrUpdate;
 
 public static partial class EventCreateOrUpdate
 {

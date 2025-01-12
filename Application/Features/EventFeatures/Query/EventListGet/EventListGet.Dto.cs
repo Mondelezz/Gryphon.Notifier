@@ -1,6 +1,6 @@
 using Domain.Enums;
 
-namespace Application.Features.EventFeatures.Query;
+namespace Application.Features.EventFeatures.Query.EventListGet;
 
 public static partial class EventListGet
 {

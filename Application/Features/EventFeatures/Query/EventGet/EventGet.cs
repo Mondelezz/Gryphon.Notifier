@@ -5,7 +5,7 @@ using Infrastructure.DbContexts;
 using Mediator;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.EventFeatures.Query;
+namespace Application.Features.EventFeatures.Query.EventGet;
 
 public static partial class EventGet
 {

@@ -5,7 +5,7 @@ using Infrastructure.DbContexts;
 using Mediator;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.EventFeatures.Command;
+namespace Application.Features.EventFeatures.Command.EventCreateOrUpdate;
 
 /// <summary>
 /// Отвечает за создание или обновление события

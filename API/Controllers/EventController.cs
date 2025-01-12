@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Application.Features.EventFeatures.Command;
 using Mediator;
-using Application.Features.EventFeatures.Query;
+using Application.Features.EventFeatures.Query.EventGet;
+using Application.Features.EventFeatures.Query.EventListGet;
+using Application.Features.EventFeatures.Command.EventCreateOrUpdate;
 using System.ComponentModel.DataAnnotations;
 
 namespace API.Controllers;

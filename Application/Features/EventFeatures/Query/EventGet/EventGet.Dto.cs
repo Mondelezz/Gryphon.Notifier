@@ -1,5 +1,5 @@
 using Domain.Enums;
-namespace Application.Features.EventFeatures.Query;
+namespace Application.Features.EventFeatures.Query.EventGet;
 
 public static partial class EventGet
 {
