@@ -84,8 +84,8 @@ public static partial class EventListGet
                 (Sorting.Importance, true) => query.OrderByDescending(e => e.Importance),
                 (Sorting.Importance, false) => query.OrderBy(e => e.Importance),
 
-                (Sorting.Price, true) => query.OrderByDescending(e => e.Price).ThenByDescending(e => e.Price == null || e.Price == 0),
-                (Sorting.Price, false) => query.OrderBy(e => e.Price).ThenBy(e => e.Price == null || e.Price == 0),
+                (Sorting.Price, true) => query.OrderByDescending(e => e.Price.HasValue).ThenByDescending(e => e.Price),
+                (Sorting.Price, false) => query.OrderBy(e => e.Price.HasValue).ThenBy(e => e.Price),
 
                 _ => query.OrderByDescending(e => e.CreateDate) // default
             };
