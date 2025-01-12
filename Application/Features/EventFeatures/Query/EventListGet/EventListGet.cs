@@ -29,9 +29,11 @@ public static partial class EventListGet
 
             int totalCount = await query.CountAsync(cancellationToken);
 
+            decimal totalPrice = await query.SumAsync(e => e.Price, cancellationToken) ?? 0;
+
             if (totalCount == 0)
             {
-                return new ResponseDto([], totalCount);
+                return new ResponseDto([], totalCount, 0);
             }
 
             if (request.SkipCount >= totalCount)
@@ -46,7 +48,7 @@ public static partial class EventListGet
                 .Take(request.Offset)
                 .ToListAsync(cancellationToken);
 
-            return new ResponseDto(Mapper.Map(result), totalCount);
+            return new ResponseDto(Mapper.Map(result), totalCount, totalPrice);
         }
 
         private static void ApplyFilters(

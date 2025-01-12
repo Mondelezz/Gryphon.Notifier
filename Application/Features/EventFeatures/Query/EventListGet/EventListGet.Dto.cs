@@ -4,7 +4,7 @@ namespace Application.Features.EventFeatures.Query.EventListGet;
 
 public static partial class EventListGet
 {
-    public record ResponseDto(IReadOnlyList<EventDto> EventDtos, int TotalCount);
+    public record ResponseDto(IReadOnlyList<EventDto> EventDtos, int TotalCount, decimal TotalPrice);
 
     public record EventDto(
         long EventId,
