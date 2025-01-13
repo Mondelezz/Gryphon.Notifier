@@ -1,6 +1,8 @@
 using Mediator;
 using Microsoft.AspNetCore.Mvc;
 using Application.Features.EventFeatures.Command.GroupEventCreateOrUpdate;
+using Application.Features.EventFeatures.Query.GroupEventListGet;
+
 
 namespace API.Controllers;
 
@@ -30,4 +32,16 @@ public class GroupEventController(IMediator mediator) : ControllerBase
             currentUserId,
             groupEventId,
             requestDto), cancellationToken);
+
+    /// <summary>
+    /// Получение списка групп для событий
+    /// </summary>
+    /// <param name="currentUserId">Идентификатор текущего пользователя</param>
+    /// <param name="cancellationToken">Токен отмены</param>
+    /// <returns>Список групп</returns>
+    [HttpGet]
+    public async Task<ActionResult<GroupEventListGet.ResponseDto>> GetGroupEventListAsync(
+        string currentUserId,
+        CancellationToken cancellationToken = default) => await mediator.Send
+        (new GroupEventListGet.Query(currentUserId), cancellationToken);
 }
