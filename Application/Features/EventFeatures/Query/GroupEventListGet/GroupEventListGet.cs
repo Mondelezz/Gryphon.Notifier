@@ -24,7 +24,7 @@ public static partial class GroupEventListGet
 
             if (totalCount == 0)
             {
-                return new ResponseDto([], 0);
+                return new ResponseDto([], totalCount);
             }
 
             return new ResponseDto(Mapper.Map(groupEventsDb), totalCount);
