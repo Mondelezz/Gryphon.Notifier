@@ -4,7 +4,7 @@ namespace Application.Features.EventFeatures.Query.EventListGet;
 
 public static partial class EventListGet
 {
-    public record ResponseDto(IReadOnlyList<EventDto> EventDtos, int TotalCount, decimal TotalPrice);
+    public record ResponseDto(IReadOnlyList<EventDto> EventDtos, int TotalCount, int ActualEventsCount, int EndedEventsCount, decimal TotalPrice);
 
     public record EventDto(
         long EventId,
@@ -23,7 +23,8 @@ public static partial class EventListGet
 
     public record RequestFilter(
         string? SearchTermFilter = default,
-        bool? IndicatedPriceFilter = default);
+        bool? IndicatedPriceFilter = default,
+        bool IsDeleted = default);
 
     public enum Sorting
     {

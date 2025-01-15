@@ -29,6 +29,8 @@ public static partial class EventListGet
                 .Where(e => e.UserId == request.UserId && (request.GroupEventId == 0 || (e.GroupEventId.HasValue && e.GroupEventId.Value == request.GroupEventId!.Value)))
                 .AsQueryable();
 
+            int actualEventsCount = await query.CountAsync(e => !e.IsDeleted, cancellationToken);
+
             ApplyFilters(request.Filter, ref query);
 
             int totalCount = await query.CountAsync(cancellationToken);
@@ -37,13 +39,15 @@ public static partial class EventListGet
 
             if (totalCount == 0)
             {
-                return new ResponseDto([], totalCount, 0);
+                return new ResponseDto([], totalCount, 0, 0, totalPrice);
             }
 
             if (request.SkipCount >= totalCount)
             {
                 request = request with { SkipCount = totalCount - 1 };
             }
+
+            int endedEventsCount = totalCount - actualEventsCount;
 
             Sort(request.Sorting, ref query, request.SortByDescending);
 
@@ -52,7 +56,7 @@ public static partial class EventListGet
                 .Take(request.Offset)
                 .ToListAsync(cancellationToken);
 
-            return new ResponseDto(Mapper.Map(result), totalCount, totalPrice);
+            return new ResponseDto(Mapper.Map(result), totalCount, actualEventsCount, endedEventsCount, totalPrice);
         }
 
         private static void ApplyFilters(
@@ -69,6 +73,11 @@ public static partial class EventListGet
                 query = filter.IndicatedPriceFilter.Value
                     ? query.Where(e => e.Price > 0) // Фильтр для событий с указанной ценой
                     : query.Where(e => e.Price == null || e.Price == 0); // Фильтр для событий без указанной цены
+            }
+
+            if (filter.IsDeleted)
+            {
+                query = query.Where(e => e.IsDeleted);
             }
 
             if (!string.IsNullOrEmpty(filter.SearchTermFilter))

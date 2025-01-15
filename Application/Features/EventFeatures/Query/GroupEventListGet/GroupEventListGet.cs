@@ -19,7 +19,7 @@ public static partial class GroupEventListGet
         public async ValueTask<ResponseDto> Handle(Query request, CancellationToken cancellationToken)
         {
             IReadOnlyList<GroupEvent> groupEventsDb = await queryDbContext.GroupEvents
-                .Where(ge => ge.UserId == request.CurrentUserId)
+                .Where(ge => ge.UserId == request.CurrentUserId && !ge.IsDeleted)
                 .OrderBy(ge => ge.CreateDate)
                 .ToListAsync(cancellationToken);
 
