@@ -8,12 +8,12 @@ namespace Application.Features.EventFeatures.Query.EventListGet;
 
 /// <summary>
 /// Отвечает за получение списка событий с возможностью фильтрации, сортировки и пагинации
+/// в том числе идёт получение общего количества событий, количества активных и завершённых событий
 /// </summary>
 public static partial class EventListGet
 {
     public record Query(
             string UserId,
-            long? GroupEventId,
             int Offset,
             int SkipCount,
             Sorting Sorting,
@@ -25,27 +25,27 @@ public static partial class EventListGet
         public async ValueTask<ResponseDto> Handle(Query request, CancellationToken cancellationToken)
         {
             IQueryable<Event> query = queryDbContext.Events
+                .Where(e => e.UserId == request.UserId)
                 .Include(e => e.GroupEvent)
-                .Where(e => e.UserId == request.UserId && (request.GroupEventId == 0 || (e.GroupEventId.HasValue && e.GroupEventId.Value == request.GroupEventId!.Value)))
                 .AsQueryable();
-
-            int actualEventsCount = await query.CountAsync(e => !e.IsDeleted, cancellationToken);
 
             ApplyFilters(request.Filter, ref query);
 
             int totalCount = await query.CountAsync(cancellationToken);
 
-            decimal totalPrice = await query.SumAsync(e => e.Price, cancellationToken) ?? 0;
-
             if (totalCount == 0)
             {
-                return new ResponseDto([], totalCount, 0, 0, totalPrice);
+                return new ResponseDto([], 0, 0, 0, 0);
             }
 
             if (request.SkipCount >= totalCount)
             {
                 request = request with { SkipCount = totalCount - 1 };
             }
+
+            decimal totalPrice = await query.SumAsync(e => e.Price, cancellationToken) ?? 0;
+
+            int actualEventsCount = await query.CountAsync(e => e.DateEvent > DateTime.UtcNow, cancellationToken);
 
             int endedEventsCount = totalCount - actualEventsCount;
 
@@ -75,16 +75,16 @@ public static partial class EventListGet
                     : query.Where(e => e.Price == null || e.Price == 0); // Фильтр для событий без указанной цены
             }
 
-            if (filter.IsDeleted)
-            {
-                query = query.Where(e => e.IsDeleted);
-            }
-
             if (!string.IsNullOrEmpty(filter.SearchTermFilter))
             {
                 query = query.Where(e =>
                     EF.Functions.ILike(e.Name, $"%{filter.SearchTermFilter}%") ||
                     EF.Functions.ILike(e.Description ?? "", $"%{filter.SearchTermFilter}%"));
+            }
+
+            if (filter.GroupEventId is not null)
+            {
+                query = query.Where(e => e.GroupEventId == filter.GroupEventId.Value);
             }
         }
 

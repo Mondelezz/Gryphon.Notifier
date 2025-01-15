@@ -18,13 +18,13 @@ public static partial class EventListGet
         GroupEventDto? GroupEventDto);
 
     public record GroupEventDto(
-        long EventGroupId,
+        long GroupEventId,
         string Name);
 
     public record RequestFilter(
         string? SearchTermFilter = default,
-        bool? IndicatedPriceFilter = default,
-        bool IsDeleted = default);
+        long? GroupEventId = default,
+        bool? IndicatedPriceFilter = default);
 
     public enum Sorting
     {
