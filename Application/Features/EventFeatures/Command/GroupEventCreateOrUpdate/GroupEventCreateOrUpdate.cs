@@ -7,6 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.EventFeatures.Command.GroupEventCreateOrUpdate;
 
+/// <summary>
+/// Отвечает за создание/обновление группы для событий
+/// </summary>
 public static partial class GroupEventCreateOrUpdate
 {
     public record Command(

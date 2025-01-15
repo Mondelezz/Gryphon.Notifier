@@ -6,6 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.EventFeatures.Query.GroupEventListGet;
 
+/// <summary>
+/// Отвечает за получение списка групп для событий
+/// </summary>
 public static partial class GroupEventListGet
 {
     public record Query(

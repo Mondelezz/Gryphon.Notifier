@@ -7,6 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.EventFeatures.Query.EventGet;
 
+/// <summary>
+/// Отвечает за получение события
+/// </summary>
 public static partial class EventGet
 {
     public record Query(

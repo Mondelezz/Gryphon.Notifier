@@ -6,6 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.EventFeatures.Query.EventListGet;
 
+/// <summary>
+/// Отвечает за получение списка событий с возможностью фильтрации, сортировки и пагинации
+/// </summary>
 public static partial class EventListGet
 {
     public record Query(
