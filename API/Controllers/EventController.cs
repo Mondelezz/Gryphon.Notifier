@@ -4,6 +4,7 @@ using Application.Features.EventFeatures.Query.EventGet;
 using Application.Features.EventFeatures.Query.EventListGet;
 using Application.Features.EventFeatures.Command.EventCreateOrUpdate;
 using System.ComponentModel.DataAnnotations;
+using Application.Features.EventFeatures.Command.AddEventToGroupEvent;
 
 namespace API.Controllers;
 
@@ -31,6 +32,25 @@ public class EventController(IMediator mediator) : ControllerBase
             new EventCreateOrUpdate.Command(requestDto, eventId, currentUserId), cancellationToken);
 
     /// <summary>
+    /// Добавляет событие к указанной группе
+    /// </summary>
+    /// <param name="currentUserId">Идентификатор текущего пользователя</param>
+    /// <param name="groupEventId">Идентификатор группы, куда следует переместить событие</param>
+    /// <param name="eventId">Идентификатор события</param>
+    /// <param name="cancellationToken">Токен отмены</param>
+    /// <returns>Идентификатор добавленного события</returns>
+    [HttpPost("add-to-group")]
+    public async Task<ActionResult<long>> AddEventToGroupEvent(
+        string currentUserId,
+        long groupEventId,
+        long eventId,
+        CancellationToken cancellationToken = default) => await mediator.Send(
+            new AddEventToGroupEvent.Command(
+                currentUserId,
+                groupEventId,
+                eventId), cancellationToken);
+
+    /// <summary>
     /// Получение события по идентификатору
     /// </summary>
     /// <param name="currentUserId">Идентификатор текущего пользователя</param>
@@ -54,7 +74,7 @@ public class EventController(IMediator mediator) : ControllerBase
     /// <param name="sortByDescending">Флаг для сортировки по убыванию.</param>
     /// <param name="requestFilter">Фильтр для поиска организаций.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
-    /// <returns></returns>
+    /// <returns>Список событий</returns>
     [HttpGet]
     public async Task<EventListGet.ResponseDto> GetEventListAsync(
         string currentUserId,
@@ -70,5 +90,4 @@ public class EventController(IMediator mediator) : ControllerBase
                 sorting,
                 sortByDescending,
                 requestFilter), cancellationToken);
-
 }
