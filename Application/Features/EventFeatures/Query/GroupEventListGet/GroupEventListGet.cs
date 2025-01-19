@@ -1,8 +1,8 @@
 using Application.Common;
-using Domain.Models.Event;
+
 using Infrastructure.DbContexts;
+
 using Mediator;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.EventFeatures.Query.GroupEventListGet;
 

@@ -11,6 +11,7 @@ public static partial class GroupEventCreateOrUpdate
         public static GroupEvent Map(GroupEventDto source, string userId) => new()
         {
             Name = source.Name,
+            GroupEventType = source.GroupEventType,
             UserId = userId,
         };
     }

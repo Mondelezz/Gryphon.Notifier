@@ -5,5 +5,6 @@ public static partial class GroupEventCreateOrUpdate
     public record RequestDto(GroupEventDto GroupEventDto);
 
     public record GroupEventDto(
-        string Name);
+        string Name,
+        GroupEventType GroupEventType);
 }

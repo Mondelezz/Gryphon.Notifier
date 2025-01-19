@@ -3,7 +3,6 @@ using Domain.Models.Event;
 using Infrastructure.DbContexts;
 using Mediator;
 using Microsoft.EntityFrameworkCore;
-using Application.Exceptions;
 
 namespace Application.Features.EventFeatures.Command.AddEventToGroupEvent;
 

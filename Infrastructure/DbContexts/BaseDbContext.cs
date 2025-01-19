@@ -12,6 +12,9 @@ public abstract partial class BaseDbContext : DbContext
 
     public static void MapEnums(
     ModelBuilder? modelBuilder = default,
-    NpgsqlDataSourceBuilder? npgsqlDataSourceBuilder = default) => MapEnum<Importance>(modelBuilder, npgsqlDataSourceBuilder);
-
+    NpgsqlDataSourceBuilder? npgsqlDataSourceBuilder = default)
+    {
+        MapEnum<Importance>(modelBuilder, npgsqlDataSourceBuilder);
+        MapEnum<GroupEventType>(modelBuilder, npgsqlDataSourceBuilder);
+    }
 }

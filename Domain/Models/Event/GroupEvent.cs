@@ -1,4 +1,5 @@
 using Domain.Common;
+using Domain.Enums;
 
 namespace Domain.Models.Event;
 
@@ -11,6 +12,11 @@ public class GroupEvent : EntityBase, IEntityState
     /// Наименование группы
     /// </summary>
     public required string Name { get; set; }
+
+    /// <summary>
+    /// Тип группы, от которого зависит первоначальная настройка событий входящих в группу
+    /// </summary>
+    public required GroupEventType GroupEventType { get; set; }
 
     /// <summary>
     /// События

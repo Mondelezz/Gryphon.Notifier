@@ -1,9 +1,8 @@
 using Application.Common;
-using Application.Exceptions;
-using Domain.Models.Event;
+
 using Infrastructure.DbContexts;
+
 using Mediator;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.EventFeatures.Query.EventGet;
 
