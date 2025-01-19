@@ -11,6 +11,7 @@ namespace API.Controllers;
 /// <summary>
 /// Отвечает за работу с событиями
 /// </summary>
+/// <param name="mediator">IMediator</param>
 [Route("api/v1/event")]
 [ApiController]
 public class EventController(IMediator mediator) : ControllerBase
@@ -20,6 +21,7 @@ public class EventController(IMediator mediator) : ControllerBase
     /// </summary>
     /// <param name="requestDto">Событие</param>
     /// <param name="eventId">Идентификатор события</param>
+    /// <param name="groupEventId">Идентификатор группы, в которой создаётся событие</param>
     /// <param name="currentUserId">Идентификатор текущего пользователя</param>
     /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>Идентификатор созданной или обновлённой сущности</returns>
@@ -27,9 +29,10 @@ public class EventController(IMediator mediator) : ControllerBase
     public async Task<ActionResult<long>> CreateOrUpdateEventAsync(
         EventCreateOrUpdate.RequestDto requestDto,
         long? eventId,
+        long? groupEventId,
         string currentUserId,
         CancellationToken cancellationToken = default) => await mediator.Send(
-            new EventCreateOrUpdate.Command(requestDto, eventId, currentUserId), cancellationToken);
+            new EventCreateOrUpdate.Command(requestDto, eventId, groupEventId, currentUserId), cancellationToken);
 
     /// <summary>
     /// Добавляет событие к указанной группе

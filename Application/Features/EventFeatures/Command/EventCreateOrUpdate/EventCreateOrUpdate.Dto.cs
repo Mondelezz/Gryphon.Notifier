@@ -9,6 +9,8 @@ public static partial class EventCreateOrUpdate
         string? Description,
         Importance Importance,
         DateTime DateEvent,
+        DateTime? TimeEventStart,
+        DateTime? TimeEventEnded,
         decimal? Price,
         bool IsIterative);
 }

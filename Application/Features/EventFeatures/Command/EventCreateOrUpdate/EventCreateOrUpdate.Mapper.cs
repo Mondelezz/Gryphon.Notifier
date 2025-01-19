@@ -12,9 +12,13 @@ public static partial class EventCreateOrUpdate
             Name = source.Name,
             Description = source.Description,
             Importance = source.Importance,
-            DateEvent = source.DateEvent,
             Price = source.Price,
             IsIterative = source.IsIterative,
+
+            DateEvent = source.DateEvent,
+            TimeEventStart = source.TimeEventStart,
+            TimeEventEnded = source.TimeEventEnded,
+
             UserId = userId,
             GroupEventId = groupEventId
         };
