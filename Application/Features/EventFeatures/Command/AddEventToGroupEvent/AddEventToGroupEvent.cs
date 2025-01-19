@@ -1,8 +1,8 @@
 using Application.Common;
-using Domain.Models.Event;
+
 using Infrastructure.DbContexts;
+
 using Mediator;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.EventFeatures.Command.AddEventToGroupEvent;
 
@@ -33,28 +33,21 @@ public static partial class AddEventToGroupEvent
             return eventDb.Id;
         }
 
-        private async Task<Event> GetEventAsync(Command request, CancellationToken cancellationToken)
-        {
-            Event eventDb = await commandDbContext.Events
+        private async Task<Event> GetEventAsync(Command request, CancellationToken cancellationToken) =>
+            await commandDbContext.Events
                 .Where(e => e.Id == request.EventId &&
                             e.UserId == request.CurrentUserId &&
                            !e.IsDeleted)
                 .FirstOrDefaultAsync(cancellationToken)
                 ?? throw new EntityNotFoundException(request.EventId, request.CurrentUserId, "event", "user");
 
-            return eventDb;
-        }
 
-        private async Task<GroupEvent> GetGroupEventAsync(Command request, CancellationToken cancellationToken)
-        {
-            GroupEvent groupEventDb = await commandDbContext.GroupEvents
+        private async Task<GroupEvent> GetGroupEventAsync(Command request, CancellationToken cancellationToken) =>
+            await commandDbContext.GroupEvents
                 .Where(ge => ge.Id == request.GroupEventId &&
                              ge.UserId == request.CurrentUserId &&
                             !ge.IsDeleted)
                 .FirstOrDefaultAsync(cancellationToken)
                 ?? throw new EntityNotFoundException(request.GroupEventId, request.CurrentUserId, "groupEvent", "user");
-
-            return groupEventDb;
-        }
     }
 }

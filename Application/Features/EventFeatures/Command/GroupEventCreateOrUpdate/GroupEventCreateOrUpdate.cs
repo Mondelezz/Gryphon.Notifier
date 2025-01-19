@@ -24,10 +24,8 @@ public static partial class GroupEventCreateOrUpdate
             {
                 return await CreateGroupEventAsync(request, cancellationToken);
             }
-            else
-            {
-                return await UpdateGroupEventAsync(request, cancellationToken);
-            }
+
+            return await UpdateGroupEventAsync(request, cancellationToken);
         }
 
         private async ValueTask<long> CreateGroupEventAsync(Command request, CancellationToken cancellationToken)
@@ -46,6 +44,8 @@ public static partial class GroupEventCreateOrUpdate
                 .Where(ge => ge.Id == request.GroupId && ge.UserId == request.CurrentUserId)
                 .FirstOrDefaultAsync(cancellationToken)
                 ?? throw new EntityNotFoundException(request.GroupId!.Value, request.CurrentUserId, "groupEvent", "user");
+
+            groupEventDb = Mapper.Map(request.RequestDto.GroupEventDto, request.CurrentUserId);
 
             commandDbContext.Update(groupEventDb);
 
