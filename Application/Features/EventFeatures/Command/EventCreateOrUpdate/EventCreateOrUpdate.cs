@@ -26,19 +26,20 @@ public static partial class EventCreateOrUpdate
 
     public class Handler(CommandDbContext commandDbContext) : IRequestHandler<Command, long>
     {
-        public async ValueTask<long> Handle(Command request, CancellationToken cancellationToken)
-        {
-            if (request.EventId is null)
-            {
-                return await CreateEventAsync(request, cancellationToken);
-            }
-
-            return await UpdateEventAsync(request, cancellationToken);
-        }
+        public async ValueTask<long> Handle(Command request, CancellationToken cancellationToken) =>
+            request.EventId is null
+                ? await CreateEventAsync(request, cancellationToken)
+                : await UpdateEventAsync(request, cancellationToken);
 
         private async ValueTask<long> CreateEventAsync(Command request, CancellationToken cancellationToken)
         {
             Event eventDb = Mapper.Map(request.RequestDto.EventDto, request.CurrentUserId, request.GroupEventId);
+
+            // В случае, если событие уже прошло, то мы его помечаем как завершённое. 
+            if (eventDb.DateEvent < DateTime.UtcNow)
+            {
+                eventDb.IsCompleted = true;
+            }
 
             await commandDbContext.Events.AddAsync(eventDb, cancellationToken);
             await commandDbContext.SaveChangesAsync(cancellationToken);
@@ -54,6 +55,12 @@ public static partial class EventCreateOrUpdate
                 ?? throw new EntityNotFoundException(request.EventId!.Value, request.CurrentUserId, "event", "user");
 
             eventDb = Mapper.Map(request.RequestDto.EventDto, request.CurrentUserId, request.GroupEventId);
+
+            // В случае, если событие уже прошло, то мы его помечаем как завершённое. 
+            if (eventDb.DateEvent < DateTime.UtcNow)
+            {
+                eventDb.IsCompleted = true;
+            }
 
             commandDbContext.Update(eventDb);
 

@@ -57,5 +57,13 @@ public class Event : EntityBase, IEntityState
     /// </summary>
     public required string UserId { get; set; }
 
+    /// <summary>
+    /// Событие удалено
+    /// </summary>
     public bool IsDeleted { get; set; }
+
+    /// <summary>
+    /// Событие завершено
+    /// </summary>
+    public bool IsCompleted { get; set; }
 }

@@ -86,6 +86,11 @@ public static partial class EventListGet
             {
                 query = query.Where(e => e.GroupEventId == filter.GroupEventId.Value);
             }
+
+            if (filter.IsCompleted is not null)
+            {
+                query = query.Where(e => e.IsCompleted == filter.IsCompleted);
+            }
         }
 
         private static void Sort(Sorting sorting, ref IQueryable<Event> query, bool sortByDescending) =>

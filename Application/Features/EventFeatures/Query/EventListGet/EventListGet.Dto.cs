@@ -24,13 +24,14 @@ public static partial class EventListGet
     public record RequestFilter(
         string? SearchTermFilter = default,
         long? GroupEventId = default,
-        bool? IndicatedPriceFilter = default);
+        bool? IndicatedPriceFilter = default,
+        bool? IsCompleted = default);
 
     public enum Sorting
     {
-        Id,
-        DateEvent,
-        Importance,
-        Price
+        Id = 0,
+        DateEvent = 1,
+        Importance = 2,
+        Price = 3
     }
 }
