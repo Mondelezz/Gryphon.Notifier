@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35201.131
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "API\API.csproj", "{6A9BFC9C-00D4-4AF5-8928-F3458CCF7F0D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "API\API.csproj", "{6A9BFC9C-00D4-4AF5-8928-F3458CCF7F0D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{AAE6BA9D-8B4D-4046-B73B-1D8377F11888}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{AAE6BA9D-8B4D-4046-B73B-1D8377F11888}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{EB59BB90-277A-4DDC-AB1A-FB09F1C8B055}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{EB59BB90-277A-4DDC-AB1A-FB09F1C8B055}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{7C001A53-E7DC-4CE4-91CC-30FA1119D5FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{7C001A53-E7DC-4CE4-91CC-30FA1119D5FE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{385D8946-13A2-4E07-A279-0789235834E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gryphon.IntegrationTests", "Gryphon.IntegrationTests\Gryphon.IntegrationTests.csproj", "{C4B1B931-FC9B-43A5-A1D0-A45E4F96D67E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,10 @@ Global
 		{7C001A53-E7DC-4CE4-91CC-30FA1119D5FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C001A53-E7DC-4CE4-91CC-30FA1119D5FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C001A53-E7DC-4CE4-91CC-30FA1119D5FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4B1B931-FC9B-43A5-A1D0-A45E4F96D67E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4B1B931-FC9B-43A5-A1D0-A45E4F96D67E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4B1B931-FC9B-43A5-A1D0-A45E4F96D67E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4B1B931-FC9B-43A5-A1D0-A45E4F96D67E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,6 +50,7 @@ Global
 		{AAE6BA9D-8B4D-4046-B73B-1D8377F11888} = {385D8946-13A2-4E07-A279-0789235834E3}
 		{EB59BB90-277A-4DDC-AB1A-FB09F1C8B055} = {385D8946-13A2-4E07-A279-0789235834E3}
 		{7C001A53-E7DC-4CE4-91CC-30FA1119D5FE} = {385D8946-13A2-4E07-A279-0789235834E3}
+		{C4B1B931-FC9B-43A5-A1D0-A45E4F96D67E} = {385D8946-13A2-4E07-A279-0789235834E3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {97D92E27-A6B5-419F-A2CE-7E8D112D11F9}

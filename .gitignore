@@ -269,3 +269,5 @@ __pycache__/
 
 # Temporarily
 **/README.*.md
+
+*.feature.cs
