@@ -1,8 +1,10 @@
 using Infrastructure.DbContexts;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
 using Npgsql;
 
 namespace Infrastructure;
@@ -53,8 +55,8 @@ public static class DependencyInjection
     {
         if (environment.IsDevelopment())
         {
-            optionsBuilder.EnableSensitiveDataLogging(true);
-            optionsBuilder.EnableDetailedErrors();
+            optionsBuilder.EnableSensitiveDataLogging(true)
+                          .EnableDetailedErrors();
         }
 
         return optionsBuilder;
