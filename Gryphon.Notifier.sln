@@ -12,8 +12,13 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{7C001A53-E7DC-4CE4-91CC-30FA1119D5FE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{385D8946-13A2-4E07-A279-0789235834E3}"
+	ProjectSection(SolutionItems) = preProject
+		.postgres.env = .postgres.env
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gryphon.IntegrationTests", "Gryphon.IntegrationTests\Gryphon.IntegrationTests.csproj", "{C4B1B931-FC9B-43A5-A1D0-A45E4F96D67E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gryphon.IntegrationTests", "Gryphon.IntegrationTests\Gryphon.IntegrationTests.csproj", "{C4B1B931-FC9B-43A5-A1D0-A45E4F96D67E}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{E8BB18E4-2000-4927-9644-53B499C9350E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +46,10 @@ Global
 		{C4B1B931-FC9B-43A5-A1D0-A45E4F96D67E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4B1B931-FC9B-43A5-A1D0-A45E4F96D67E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4B1B931-FC9B-43A5-A1D0-A45E4F96D67E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8BB18E4-2000-4927-9644-53B499C9350E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8BB18E4-2000-4927-9644-53B499C9350E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8BB18E4-2000-4927-9644-53B499C9350E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8BB18E4-2000-4927-9644-53B499C9350E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

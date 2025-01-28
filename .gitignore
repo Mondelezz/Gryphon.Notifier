@@ -271,3 +271,10 @@ __pycache__/
 **/README.*.md
 
 *.feature.cs
+
+*.yml
+*.env
+*.dcproj
+
+# Игнорировать папку db-data и её содержимое
+/db-data/
