@@ -31,10 +31,10 @@ public abstract class IntegrationTestWebAppFactory : WebApplicationFactory<Progr
 
         BaseDbContext context = scope.ServiceProvider.GetRequiredService<BaseDbContext>();
 
-        await context.Database.EnsureCreatedAsync();
-
         // Применение всех миграций к базе данных
         await context.Database.MigrateAsync();
+
+        await context.Database.EnsureCreatedAsync();
 
         // Инициализация и заполнение базы данных тестовыми данными
         await InitDatabase(context);

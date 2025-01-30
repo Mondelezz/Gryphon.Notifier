@@ -64,7 +64,7 @@ internal static class HostingExtensions
 
         app.MapControllers();
 
-        // Накатываем миграции
+        // Накатываем миграции TODO : не использовать в Production
         using (IServiceScope scope = app.Services.CreateScope())
         {
             MigrationDbContext db = scope.ServiceProvider.GetRequiredService<MigrationDbContext>();

@@ -85,7 +85,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("GroupEventId");
 
-                    b.ToTable("Events");
+                    b.ToTable("Events", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Models.Event.GroupEvent", b =>
@@ -122,7 +122,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("GroupEvents");
+                    b.ToTable("GroupEvents", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Models.Event.Event", b =>
