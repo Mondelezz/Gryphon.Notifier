@@ -22,5 +22,21 @@ public static partial class EventCreateOrUpdate
             UserId = userId,
             GroupEventId = groupEventId
         };
+
+        public static void Map(Event destination, EventDto source, string userId, long? groupEventId)
+        {
+            destination.Name = source.Name;
+            destination.Description = source.Description;
+            destination.Importance = source.Importance;
+            destination.Price = source.Price;
+            destination.IsIterative = source.IsIterative;
+
+            destination.DateEvent = source.DateEvent;
+            destination.TimeEventStart = source.TimeEventStart;
+            destination.TimeEventEnded = source.TimeEventEnded;
+
+            destination.UserId = userId;
+            destination.GroupEventId = groupEventId;
+        }
     }
 }

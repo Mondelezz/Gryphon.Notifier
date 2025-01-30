@@ -54,7 +54,8 @@ public static partial class EventCreateOrUpdate
                 .FirstOrDefaultAsync(cancellationToken)
                 ?? throw new EntityNotFoundException(request.EventId!.Value, request.CurrentUserId, "event", "user");
 
-            eventDb = Mapper.Map(request.RequestDto.EventDto, request.CurrentUserId, request.GroupEventId);
+            // Обновление полей сущности
+            Mapper.Map(eventDb, request.RequestDto.EventDto, request.CurrentUserId, request.GroupEventId);
 
             // В случае, если событие уже прошло, то мы его помечаем как завершённое. 
             if (eventDb.DateEvent < DateTime.UtcNow)

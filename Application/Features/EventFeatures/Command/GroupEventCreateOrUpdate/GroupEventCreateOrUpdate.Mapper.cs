@@ -1,4 +1,3 @@
-using Domain.Models.Event;
 using Riok.Mapperly.Abstractions;
 
 namespace Application.Features.EventFeatures.Command.GroupEventCreateOrUpdate;
@@ -14,5 +13,11 @@ public static partial class GroupEventCreateOrUpdate
             GroupEventType = source.GroupEventType,
             UserId = userId,
         };
+
+        public static void Map(GroupEvent destination, GroupEventDto source)
+        {
+            destination.Name = source.Name;
+            destination.GroupEventType = source.GroupEventType;
+        }
     }
 }

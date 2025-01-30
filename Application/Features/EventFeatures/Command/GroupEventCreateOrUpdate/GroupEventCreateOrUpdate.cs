@@ -45,7 +45,8 @@ public static partial class GroupEventCreateOrUpdate
                 .FirstOrDefaultAsync(cancellationToken)
                 ?? throw new EntityNotFoundException(request.GroupId!.Value, request.CurrentUserId, "groupEvent", "user");
 
-            groupEventDb = Mapper.Map(request.RequestDto.GroupEventDto, request.CurrentUserId);
+            // Обновление полей сущности
+            Mapper.Map(groupEventDb, request.RequestDto.GroupEventDto);
 
             commandDbContext.Update(groupEventDb);
 

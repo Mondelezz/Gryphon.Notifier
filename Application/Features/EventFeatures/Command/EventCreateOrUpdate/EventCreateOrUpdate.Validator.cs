@@ -38,14 +38,12 @@ public static partial class EventCreateOrUpdate
                         .WithMessage("Максимальная длина названия события 60 символов");
 
                 RuleFor(o => o.Description)
-                    .MinimumLength(1)
-                        .WithMessage("Минимальная длина описания 1 символ")
                     .MaximumLength(300)
                         .WithMessage("Максимальная длина описания 300 символов");
 
                 /*RuleFor(date => date.DateEvent)
                     .Must(date => date > DateTime.UtcNow)
-                    .WithMessage("Событие не может начаться в прошлом.");*/ //Хочу реализовать возможность создания событий, которые уже в прошлом (для памяти, что оно прошло)
+                    .WithMessage("Событие не может начаться в прошлом.");*/ //TODO: Хочу реализовать возможность создания событий, которые уже в прошлом (для памяти, что оно прошло)
 
                 RuleFor(date => date.TimeEventStart)
                     .Must((eventModel, startTime) => startTime < eventModel.TimeEventEnded)
