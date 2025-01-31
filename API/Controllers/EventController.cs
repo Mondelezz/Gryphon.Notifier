@@ -82,7 +82,7 @@ public class EventController(IMediator mediator) : ControllerBase
     public async Task<EventListGet.ResponseDto> GetEventListAsync(
         string currentUserId,
         [FromQuery][Range(1, 100)] int offset = 10,
-        [FromQuery][Range(0, int.MaxValue)] int skipCount = 10,
+        [FromQuery][Range(0, int.MaxValue)] int skipCount = 0,
         [FromQuery] EventListGet.Sorting sorting = EventListGet.Sorting.DateEvent,
         [FromQuery] bool sortByDescending = false,
         [FromQuery] EventListGet.RequestFilter? requestFilter = default,

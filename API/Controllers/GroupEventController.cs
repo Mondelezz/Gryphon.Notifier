@@ -3,13 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using Application.Features.EventFeatures.Command.GroupEventCreateOrUpdate;
 using Application.Features.EventFeatures.Query.GroupEventListGet;
 
-
 namespace API.Controllers;
 
 /// <summary>
 /// Отвечает за управление группами для событий
 /// </summary>
-/// <param name="mediator"></param>
+/// <param name="mediator">mediator</param>
 [Route("api/v1/group-events")]
 [ApiController]
 public class GroupEventController(IMediator mediator) : ControllerBase

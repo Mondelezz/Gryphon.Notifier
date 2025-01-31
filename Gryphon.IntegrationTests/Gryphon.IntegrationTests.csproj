@@ -27,4 +27,10 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="appsettings.Test.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="dump_data.sql" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+
+
 </Project>

@@ -2,16 +2,18 @@ using Testcontainers.PostgreSql;
 
 namespace Gryphon.IntegrationTests;
 
+/// <summary>
+/// Отвечвает за инициализацию и уничтожение PostgreSqlContainer
+/// </summary>
 public class DatabaseFixture : IAsyncLifetime
 {
     internal readonly PostgreSqlContainer PostgresContainer = new PostgreSqlBuilder()
             .WithImage("postgres:16.3-alpine")
-            .WithDatabase("GryphonNotifier")
             .WithUsername("postgres")
             .WithPassword("26032005")
             .Build();
 
-    public Task InitializeAsync() => PostgresContainer.StartAsync();
+    public async Task InitializeAsync() => await PostgresContainer.StartAsync();
 
-    public Task DisposeAsync() => PostgresContainer.StopAsync();
+    public async Task DisposeAsync() => await PostgresContainer.StopAsync();
 }

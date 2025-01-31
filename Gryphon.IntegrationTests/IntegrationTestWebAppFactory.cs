@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Gryphon.IntegrationTests;
@@ -14,6 +15,8 @@ public abstract class IntegrationTestWebAppFactory : WebApplicationFactory<Progr
     /// Строка подключения для базы данных
     /// </summary>
     public string? ConnectionString { get; private set; }
+
+    private const string TestEnv = "Test";
 
     internal readonly DatabaseFixture DatabaseFixture = new();
 
@@ -29,33 +32,51 @@ public abstract class IntegrationTestWebAppFactory : WebApplicationFactory<Progr
 
         using IServiceScope scope = Services.CreateScope();
 
-        BaseDbContext context = scope.ServiceProvider.GetRequiredService<BaseDbContext>();
+        // Применение миграций для QueryDbContext
+        QueryDbContext queryContext = scope.ServiceProvider.GetRequiredService<QueryDbContext>();
+        await queryContext.Database.MigrateAsync();
 
-        // Применение всех миграций к базе данных
-        await context.Database.MigrateAsync();
-
-        await context.Database.EnsureCreatedAsync();
+        // Применение миграций для CommandDbContext
+        CommandDbContext commandContext = scope.ServiceProvider.GetRequiredService<CommandDbContext>();
+        await commandContext.Database.MigrateAsync();
 
         // Инициализация и заполнение базы данных тестовыми данными
-        await InitDatabase(context);
+        await InitDatabase(queryContext, commandContext);
     }
 
+    /// <summary>
+    /// Уничтожает ресурсы тестового контейнера
+    /// </summary>
     async Task IAsyncLifetime.DisposeAsync() => await DisposeContainersAsync();
 
+    /// <summary>
+    /// Переопределяет строку подключения к базе данных для тестового контейнера
+    /// </summary>
+    /// <param name="builder">Построитель</param>
     protected override void ConfigureWebHost(IWebHostBuilder builder) =>
-        builder.ConfigureTestServices(services =>
+        builder
+        .UseEnvironment(TestEnv)
+        .UseConfiguration(new ConfigurationBuilder().AddJsonFile($"appsettings.{TestEnv}.json").Build())
+        .ConfigureTestServices(services =>
         {
-            ServiceDescriptor? dbContextServiceDescriptor = services.SingleOrDefault(s =>
-                    s.ServiceType == typeof(DbContextOptions<BaseDbContext>));
+            // Удаляем существующие регистрации контекстов, если они есть
+            List<ServiceDescriptor>? dbContextDescriptors = services
+                .Where(s => s.ServiceType == typeof(DbContextOptions<QueryDbContext>) ||
+                            s.ServiceType == typeof(DbContextOptions<CommandDbContext>))
+                .ToList();
 
-            if (dbContextServiceDescriptor is not null)
+            foreach (ServiceDescriptor descriptor in dbContextDescriptors)
             {
-                // Удалить фактическую регистрацию dbcontext
-                services.Remove(dbContextServiceDescriptor);
+                services.Remove(descriptor);
             }
 
-            // Регистрация dbcontext со строкой подключения контейнера
-            services.AddDbContext<BaseDbContext>(options => options.UseNpgsql(ConnectionString));
+            // Регистрируем QueryDbContext
+            services.AddDbContext<QueryDbContext>(options =>
+                options.UseNpgsql(ConnectionString));
+
+            // Регистрируем CommandDbContext
+            services.AddDbContext<CommandDbContext>(options =>
+                options.UseNpgsql(ConnectionString));
         });
 
     /// <summary>
@@ -71,6 +92,7 @@ public abstract class IntegrationTestWebAppFactory : WebApplicationFactory<Progr
     /// <summary>
     /// Инициализация и заполнения базы данных
     /// </summary>
-    /// <param name="context">context</param>
-    public abstract Task InitDatabase(BaseDbContext context);
+    /// <param name="queryContext">Контекст запросов</param>
+    /// <param name="commandContext">Контекст комманд</param>
+    public abstract Task InitDatabase(QueryDbContext queryContext, CommandDbContext commandContext);
 }

@@ -275,6 +275,6 @@ __pycache__/
 *.yml
 *.env
 *.dcproj
-
+*.sql
 # Игнорировать папку db-data и её содержимое
 /db-data/
