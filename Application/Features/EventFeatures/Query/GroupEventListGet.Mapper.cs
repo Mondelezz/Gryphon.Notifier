@@ -1,7 +1,6 @@
-using Domain.Models.Event;
 using Riok.Mapperly.Abstractions;
 
-namespace Application.Features.EventFeatures.Query.GroupEventListGet;
+namespace Application.Features.EventFeatures.Query;
 
 public static partial class GroupEventListGet
 {

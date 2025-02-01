@@ -1,7 +1,7 @@
 using Mediator;
 using Microsoft.AspNetCore.Mvc;
-using Application.Features.EventFeatures.Command.GroupEventCreateOrUpdate;
-using Application.Features.EventFeatures.Query.GroupEventListGet;
+using Application.Features.EventFeatures.Command;
+using Application.Features.EventFeatures.Query;
 
 namespace API.Controllers;
 

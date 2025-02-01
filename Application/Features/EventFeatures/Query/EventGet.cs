@@ -4,7 +4,7 @@ using Infrastructure.DbContexts;
 
 using Mediator;
 
-namespace Application.Features.EventFeatures.Query.EventGet;
+namespace Application.Features.EventFeatures.Query;
 
 /// <summary>
 /// Отвечает за получение события

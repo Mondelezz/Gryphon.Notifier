@@ -4,7 +4,7 @@ using Infrastructure.DbContexts;
 
 using Mediator;
 
-namespace Application.Features.EventFeatures.Command.AddEventToGroupEvent;
+namespace Application.Features.EventFeatures.Command;
 
 /// <summary>
 /// Отвечает за добавление события к какой-либо группе

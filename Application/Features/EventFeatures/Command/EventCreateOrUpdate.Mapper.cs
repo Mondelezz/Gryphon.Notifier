@@ -1,6 +1,6 @@
 using Riok.Mapperly.Abstractions;
 
-namespace Application.Features.EventFeatures.Command.EventCreateOrUpdate;
+namespace Application.Features.EventFeatures.Command;
 
 public static partial class EventCreateOrUpdate
 {

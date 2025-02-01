@@ -1,7 +1,7 @@
 using Domain.Models.Event;
 using Riok.Mapperly.Abstractions;
 
-namespace Application.Features.EventFeatures.Query.EventGet;
+namespace Application.Features.EventFeatures.Query;
 
 public static partial class EventGet
 {

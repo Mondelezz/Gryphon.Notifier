@@ -18,6 +18,8 @@ public abstract class IntegrationTestWebAppFactory : WebApplicationFactory<Progr
 
     private const string TestEnv = "Test";
 
+    private const string ParamsConnectionString = ";Include Error Detail=true;";
+
     internal readonly DatabaseFixture DatabaseFixture = new();
 
     /// <summary>
@@ -28,26 +30,22 @@ public abstract class IntegrationTestWebAppFactory : WebApplicationFactory<Progr
     {
         await InitContainersAsync();
 
-        ConnectionString = DatabaseFixture.PostgresContainer.GetConnectionString();
+        ConnectionString = DatabaseFixture.PostgresContainer.GetConnectionString() + ParamsConnectionString;
 
         using IServiceScope scope = Services.CreateScope();
 
-        // Применение миграций для QueryDbContext
-        QueryDbContext queryContext = scope.ServiceProvider.GetRequiredService<QueryDbContext>();
-        await queryContext.Database.MigrateAsync();
+        MigrationDbContext migrationDbContext = scope.ServiceProvider.GetRequiredService<MigrationDbContext>();
 
-        // Применение миграций для CommandDbContext
-        CommandDbContext commandContext = scope.ServiceProvider.GetRequiredService<CommandDbContext>();
-        await commandContext.Database.MigrateAsync();
+        // Получает все миграции, определённые в сборке, но не применённые к тестовой базе данных.
+        IEnumerable<string>? pendingMigrations = await migrationDbContext.Database.GetPendingMigrationsAsync();
 
-        // Инициализация и заполнение базы данных тестовыми данными
-        await InitDatabase(queryContext, commandContext);
+        if (pendingMigrations.Any())
+        {
+            await migrationDbContext.Database.MigrateAsync();
+
+            await InitDatabase(migrationDbContext);
+        }
     }
-
-    /// <summary>
-    /// Уничтожает ресурсы тестового контейнера
-    /// </summary>
-    async Task IAsyncLifetime.DisposeAsync() => await DisposeContainersAsync();
 
     /// <summary>
     /// Переопределяет строку подключения к базе данных для тестового контейнера
@@ -59,10 +57,10 @@ public abstract class IntegrationTestWebAppFactory : WebApplicationFactory<Progr
         .UseConfiguration(new ConfigurationBuilder().AddJsonFile($"appsettings.{TestEnv}.json").Build())
         .ConfigureTestServices(services =>
         {
-            // Удаляем существующие регистрации контекстов, если они есть
             List<ServiceDescriptor>? dbContextDescriptors = services
                 .Where(s => s.ServiceType == typeof(DbContextOptions<QueryDbContext>) ||
-                            s.ServiceType == typeof(DbContextOptions<CommandDbContext>))
+                            s.ServiceType == typeof(DbContextOptions<CommandDbContext>) ||
+                            s.ServiceType == typeof(DbContextOptions<MigrationDbContext>))
                 .ToList();
 
             foreach (ServiceDescriptor descriptor in dbContextDescriptors)
@@ -70,14 +68,20 @@ public abstract class IntegrationTestWebAppFactory : WebApplicationFactory<Progr
                 services.Remove(descriptor);
             }
 
-            // Регистрируем QueryDbContext
             services.AddDbContext<QueryDbContext>(options =>
                 options.UseNpgsql(ConnectionString));
 
-            // Регистрируем CommandDbContext
             services.AddDbContext<CommandDbContext>(options =>
                 options.UseNpgsql(ConnectionString));
+
+            services.AddDbContext<MigrationDbContext>(options =>
+                options.UseNpgsql(ConnectionString));
         });
+
+    /// <summary>
+    /// Уничтожает ресурсы тестового контейнера
+    /// </summary>
+    async Task IAsyncLifetime.DisposeAsync() => await DisposeContainersAsync();
 
     /// <summary>
     /// Инициализация контейнеров для тестов
@@ -92,7 +96,6 @@ public abstract class IntegrationTestWebAppFactory : WebApplicationFactory<Progr
     /// <summary>
     /// Инициализация и заполнения базы данных
     /// </summary>
-    /// <param name="queryContext">Контекст запросов</param>
-    /// <param name="commandContext">Контекст комманд</param>
-    public abstract Task InitDatabase(QueryDbContext queryContext, CommandDbContext commandContext);
+    /// <param name="migrationDbContext">Контекст для миграций</param>
+    public abstract Task InitDatabase(MigrationDbContext migrationDbContext);
 }

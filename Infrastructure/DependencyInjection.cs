@@ -20,7 +20,6 @@ public static class DependencyInjection
             ?? throw new NullReferenceException("ConnectionString to database is null");
 
         NpgsqlDataSourceBuilder dataSourceBuilder = new(connectionString);
-        BaseDbContext.MapEnums(null, dataSourceBuilder);
 
         NpgsqlDataSource dataSource = dataSourceBuilder.Build();
 

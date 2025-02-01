@@ -1,4 +1,4 @@
-namespace Application.Features.EventFeatures.Query.GroupEventListGet;
+namespace Application.Features.EventFeatures.Query;
 
 public static partial class GroupEventListGet
 {

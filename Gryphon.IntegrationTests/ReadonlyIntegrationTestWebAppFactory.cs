@@ -9,10 +9,10 @@ public class ReadonlyIntegrationTestWebAppFactory : IntegrationTestWebAppFactory
     public override async Task InitContainersAsync() => await DatabaseFixture.InitializeAsync();
     public override async Task DisposeContainersAsync() => await DatabaseFixture.DisposeAsync();
 
-    public override async Task InitDatabase(QueryDbContext queryContext, CommandDbContext commandContext)
+    public override async Task InitDatabase(MigrationDbContext migrationDbContext)
     {
         string sqlScript = await File.ReadAllTextAsync("./dump_data.sql");
 
-        await queryContext.Database.ExecuteSqlRawAsync(sqlScript);
+        await migrationDbContext.Database.ExecuteSqlRawAsync(sqlScript);
     }
 }

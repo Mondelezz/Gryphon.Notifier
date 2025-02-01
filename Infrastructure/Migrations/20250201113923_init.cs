@@ -1,5 +1,4 @@
 ﻿using System;
-using Domain.Enums;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -8,14 +7,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AddEvnet : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterDatabase()
-                .Annotation("Npgsql:Enum:importance", "low,medium,high");
-
             migrationBuilder.CreateTable(
                 name: "GroupEvents",
                 columns: table => new
@@ -23,7 +19,8 @@ namespace Infrastructure.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    USerId = table.Column<string>(type: "text", nullable: false),
+                    GroupEventType = table.Column<string>(type: "text", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: false),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "timezone('utc', current_timestamp)"),
                     UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "timezone('utc', current_timestamp)")
@@ -41,13 +38,16 @@ namespace Infrastructure.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
-                    Importance = table.Column<Importance>(type: "importance", nullable: false),
+                    Importance = table.Column<string>(type: "text", nullable: false),
                     DateEvent = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    TimeEventStart = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    TimeEventEnded = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     Price = table.Column<decimal>(type: "numeric", nullable: true),
-                    IsIterative = table.Column<bool>(type: "boolean", nullable: true),
+                    IsIterative = table.Column<bool>(type: "boolean", nullable: false),
                     GroupEventId = table.Column<long>(type: "bigint", nullable: true),
                     UserId = table.Column<string>(type: "text", nullable: false),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    IsCompleted = table.Column<bool>(type: "boolean", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "timezone('utc', current_timestamp)"),
                     UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "timezone('utc', current_timestamp)")
                 },

@@ -1,4 +1,4 @@
-using Application.Features.EventFeatures.Query.EventGet;
+using Application.Features.EventFeatures.Query;
 
 using Mediator;
 

@@ -4,7 +4,7 @@ using Infrastructure.DbContexts;
 
 using Mediator;
 
-namespace Application.Features.EventFeatures.Query.GroupEventListGet;
+namespace Application.Features.EventFeatures.Query;
 
 /// <summary>
 /// Отвечает за получение списка групп для событий

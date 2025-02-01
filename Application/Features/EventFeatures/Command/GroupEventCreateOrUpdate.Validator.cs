@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace Application.Features.EventFeatures.Command.GroupEventCreateOrUpdate;
+namespace Application.Features.EventFeatures.Command;
 
 public static partial class GroupEventCreateOrUpdate
 {

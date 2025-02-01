@@ -1,8 +1,11 @@
 using Domain.Common;
+
+using Domain.Models.Event;
+
 using Infrastructure.Configuration;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Npgsql;
 
 namespace Infrastructure.DbContexts;
 
@@ -11,8 +14,15 @@ public abstract partial class BaseDbContext(DbContextOptions options) : DbContex
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        MapEnums(modelBuilder);
         EntityDateConfigure(modelBuilder);
+
+        modelBuilder.Entity<Event>()
+            .Property(e => e.Importance)
+            .HasConversion<string>();
+
+        modelBuilder.Entity<GroupEvent>()
+            .Property(e => e.GroupEventType)
+            .HasConversion<string>();
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(BaseConfiguration<>).Assembly);
     }
@@ -34,15 +44,5 @@ public abstract partial class BaseDbContext(DbContextOptions options) : DbContex
 
             property.SetDefaultValueSql("timezone('utc', current_timestamp)");
         }
-    }
-
-    private static void MapEnum<TEnum>(
-       ModelBuilder? modelBuilder = default,
-       NpgsqlDataSourceBuilder? npgsqlDataSourceBuilder = default)
-       where TEnum : struct, Enum
-    {
-        modelBuilder?.HasPostgresEnum<TEnum>();
-
-        npgsqlDataSourceBuilder?.MapEnum<TEnum>();
     }
 }

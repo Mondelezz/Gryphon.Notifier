@@ -1,8 +1,7 @@
 using Microsoft.OpenApi.Models;
 using Infrastructure;
 using Application;
-using Infrastructure.DbContexts;
-using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 namespace API;
 
@@ -10,7 +9,10 @@ internal static class HostingExtensions
 {
     public static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
     {
-        builder.Services.AddControllers();
+        builder.Services.AddControllers()
+            .AddJsonOptions(options =>
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter())); // Конвертирует enum в string
+
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(options =>
         {
@@ -63,13 +65,6 @@ internal static class HostingExtensions
         app.UseAuthorization();
 
         app.MapControllers();
-
-        // Накатываем миграции TODO : не использовать в Production
-        using (IServiceScope scope = app.Services.CreateScope())
-        {
-            MigrationDbContext db = scope.ServiceProvider.GetRequiredService<MigrationDbContext>();
-            db.Database.Migrate();
-        }
 
         return app;
     }
