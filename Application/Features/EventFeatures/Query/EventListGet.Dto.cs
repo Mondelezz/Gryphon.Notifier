@@ -19,6 +19,13 @@ public static partial class EventListGet
         long GroupEventId,
         string Name);
 
+    /// <summary>
+    /// Фильтры
+    /// </summary>
+    /// <param name="SearchTermFilter">Поисковый фильтр</param>
+    /// <param name="GroupEventId">Идентификатор группы, к которой принадлежат события</param>
+    /// <param name="IndicatedPriceFilter">Указана цена</param>
+    /// <param name="IsCompleted">Завершено</param>
     public record RequestFilter(
         string? SearchTermFilter = default,
         long? GroupEventId = default,

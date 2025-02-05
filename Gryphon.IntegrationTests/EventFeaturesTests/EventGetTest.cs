@@ -7,22 +7,27 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Gryphon.IntegrationTests.EventFeaturesTests;
 
-public class EventGetTest(ReadonlyIntegrationTestWebAppFactory factory) : IClassFixture<ReadonlyIntegrationTestWebAppFactory>
+public class EventGetTest : IClassFixture<ReadonlyIntegrationTestWebAppFactory>
 {
+    private readonly IMediator _mediator;
+    private readonly IServiceScope _scope;
+
+    public EventGetTest(ReadonlyIntegrationTestWebAppFactory factory)
+    {
+        _scope = factory.Services.CreateScope();
+        _mediator = _scope.ServiceProvider.GetRequiredService<IMediator>();
+    }
+
     [Theory]
     [InlineData(1)]
     [InlineData(2)]
     private async Task GetEventById_ShouldReturnEvent_WhenEventExist(long eventId)
     {
         // Arrange
-        using IServiceScope scope = factory.Services.CreateScope();
-
-        IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-
         EventGet.Query query = new("1", eventId);
 
         // Act
-        EventGet.ResponseDto result = await mediator.Send(query);
+        EventGet.ResponseDto result = await _mediator.Send(query);
 
         // Assert
         Assert.NotNull(result);
@@ -35,13 +40,9 @@ public class EventGetTest(ReadonlyIntegrationTestWebAppFactory factory) : IClass
     private async Task GetEventById_ShouldReturnError_WhenEventNotExist(long eventId)
     {
         // Arrange
-        using IServiceScope scope = factory.Services.CreateScope();
-
-        IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-
         EventGet.Query query = new("1", eventId);
 
         // Act && Assert
-        EntityNotFoundException exception = await Assert.ThrowsAsync<EntityNotFoundException>(async () => await mediator.Send(request: query));
+        EntityNotFoundException exception = await Assert.ThrowsAsync<EntityNotFoundException>(async () => await _mediator.Send(request: query));
     }
 }
