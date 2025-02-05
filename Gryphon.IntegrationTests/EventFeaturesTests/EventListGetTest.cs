@@ -59,7 +59,7 @@ public class EventListGetTest : IClassFixture<ReadonlyIntegrationTestWebAppFacto
     }
 
     [Fact]
-    public async Task Handle_GeroupEventIdFilter_ReturnsCorrectResults()
+    public async Task Handle_GroupEventIdFilter_ReturnsCorrectResults()
     {
         // Arrange
         EventListGet.Query query = new(
@@ -79,7 +79,7 @@ public class EventListGetTest : IClassFixture<ReadonlyIntegrationTestWebAppFacto
     }
 
     [Fact]
-    public async Task Handle_CalculatesActualEventsCount_()
+    public async Task Handle_Calculates_ActualEventsCount_ReturnsCorrectResults()
     {
         // Arrange
         EventListGet.Query query = new(
@@ -96,5 +96,65 @@ public class EventListGetTest : IClassFixture<ReadonlyIntegrationTestWebAppFacto
 
         // Assert
         result.ActualEventsCount.Should().Be(1); // TODO: Поменять, если бэкап данных изменился
+    }
+
+    [Fact]
+    public async Task Handle_Calculates_EndedEventsCount_ReturnsCorrectResults()
+    {
+        // Arrange
+        EventListGet.Query query = new(
+            UserId: "1",
+            Offset: 10,
+            SkipCount: 0,
+            Sorting: EventListGet.Sorting.Id,
+            SortByDescending: false,
+            Filter: new EventListGet.RequestFilter()
+        );
+
+        // Act
+        EventListGet.ResponseDto result = await _mediator.Send(query);
+
+        // Assert
+        result.EndedEventsCount.Should().Be(5); // TODO: Поменять, если бэкап данных изменился
+    }
+
+    [Fact]
+    public async Task Handle_Calculates_TotalCount_Events_ReturnsCorrectResults()
+    {
+        // Arrange
+        EventListGet.Query query = new(
+            UserId: "1",
+            Offset: 10,
+            SkipCount: 0,
+            Sorting: EventListGet.Sorting.Id,
+            SortByDescending: false,
+            Filter: new EventListGet.RequestFilter()
+        );
+
+        // Act
+        EventListGet.ResponseDto result = await _mediator.Send(query);
+
+        // Assert
+        result.TotalCount.Should().Be(6); // TODO: Поменять, если бэкап данных изменился
+    }
+
+    [Fact]
+    public async Task Handle_Calculates_TotalPrice_Events_InGroup_ReturnsCorrectResults()
+    {
+        // Arrange
+        EventListGet.Query query = new(
+            UserId: "1",
+            Offset: 10,
+            SkipCount: 0,
+            Sorting: EventListGet.Sorting.Id,
+            SortByDescending: false,
+            Filter: new EventListGet.RequestFilter(GroupEventId: 1)
+        );
+
+        // Act
+        EventListGet.ResponseDto result = await _mediator.Send(query);
+
+        // Assert
+        result.TotalPrice.Should().Be(1002); // TODO: Поменять, если бэкап данных изменился
     }
 }
