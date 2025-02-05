@@ -10,6 +10,7 @@ public static partial class EventListGet
         string? Description,
         Importance Importance,
         decimal? Price,
+        bool IsCompleted,
         DateTime DateEvent,
         DateTime CreateDate,
         DateTime UpdateDate,

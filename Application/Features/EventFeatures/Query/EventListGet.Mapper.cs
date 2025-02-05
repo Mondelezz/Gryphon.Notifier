@@ -14,6 +14,7 @@ public static partial class EventListGet
                 eventdB.Description,
                 eventdB.Importance,
                 eventdB.Price,
+                eventdB.IsCompleted,
                 eventdB.DateEvent,
                 eventdB.CreateDate,
                 eventdB.UpdateDate,

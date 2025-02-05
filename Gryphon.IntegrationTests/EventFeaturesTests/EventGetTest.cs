@@ -21,7 +21,7 @@ public class EventGetTest : IClassFixture<ReadonlyIntegrationTestWebAppFactory>
     [Theory]
     [InlineData(1)]
     [InlineData(2)]
-    private async Task GetEventById_ShouldReturnEvent_WhenEventExist(long eventId)
+    public async Task GetEventById_ShouldReturnEvent_WhenEventExist(long eventId)
     {
         // Arrange
         EventGet.Query query = new("1", eventId);
@@ -37,7 +37,7 @@ public class EventGetTest : IClassFixture<ReadonlyIntegrationTestWebAppFactory>
     [Theory]
     [InlineData(6666666666)]
     [InlineData(6666666667)]
-    private async Task GetEventById_ShouldReturnError_WhenEventNotExist(long eventId)
+    public async Task GetEventById_ShouldReturnError_WhenEventNotExist(long eventId)
     {
         // Arrange
         EventGet.Query query = new("1", eventId);

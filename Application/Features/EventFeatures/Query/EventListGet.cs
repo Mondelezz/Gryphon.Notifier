@@ -45,7 +45,7 @@ public static partial class EventListGet
 
             decimal totalPrice = await query.SumAsync(e => e.Price, cancellationToken) ?? 0;
 
-            int actualEventsCount = await query.CountAsync(e => e.DateEvent > DateTime.UtcNow, cancellationToken);
+            int actualEventsCount = await query.CountAsync(e => !e.IsCompleted, cancellationToken);
 
             int endedEventsCount = totalCount - actualEventsCount;
 
