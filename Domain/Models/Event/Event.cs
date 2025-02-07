@@ -26,12 +26,12 @@ public class Event : EntityBase, IEntityState
     public required DateTime DateEvent { get; set; }
 
     /// <summary>
-    /// Время начала события
+    /// Время начала события (для событий, которые начинаются с определённого момента времени) Пример: Тренировка
     /// </summary>
     public DateTime? TimeEventStart { get; set; }
 
     /// <summary>
-    /// Время окончания события
+    /// Время окончания события (для событий, которые заканчиваются в определённый момент времени) Пример: Тренировка
     /// </summary>
     public DateTime? TimeEventEnded { get; set; }
 
