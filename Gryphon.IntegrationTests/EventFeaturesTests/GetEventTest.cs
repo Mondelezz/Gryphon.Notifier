@@ -7,12 +7,12 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Gryphon.IntegrationTests.EventFeaturesTests;
 
-public class EventGetTest : IClassFixture<ReadonlyIntegrationTestWebAppFactory>
+public class GetEventTest : IClassFixture<ReadonlyIntegrationTestWebAppFactory>
 {
     private readonly IMediator _mediator;
     private readonly IServiceScope _scope;
 
-    public EventGetTest(ReadonlyIntegrationTestWebAppFactory factory)
+    public GetEventTest(ReadonlyIntegrationTestWebAppFactory factory)
     {
         _scope = factory.Services.CreateScope();
         _mediator = _scope.ServiceProvider.GetRequiredService<IMediator>();
