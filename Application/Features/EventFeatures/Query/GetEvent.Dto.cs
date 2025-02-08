@@ -1,6 +1,6 @@
 namespace Application.Features.EventFeatures.Query;
 
-public static partial class EventGet
+public static partial class GetEvent
 {
     public record ResponseDto(EventDto EventDto);
 
@@ -11,7 +11,7 @@ public static partial class EventGet
         Importance Importance,
         decimal? Price,
         bool IsIterative,
-        long? GroupEventId,
+        long? TopicId,
         string UserId,
         DateTime DateEvent,
         DateTime CreateDate,

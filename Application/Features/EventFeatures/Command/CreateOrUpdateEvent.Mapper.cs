@@ -2,12 +2,12 @@ using Riok.Mapperly.Abstractions;
 
 namespace Application.Features.EventFeatures.Command;
 
-public static partial class EventCreateOrUpdate
+public static partial class CreateOrUpdateEvent
 {
     [Mapper]
     public static partial class Mapper
     {
-        public static Event Map(EventDto source, string userId, long? groupEventId) => new()
+        public static Event Map(EventDto source, string userId, long? topicId) => new()
         {
             Name = source.Name,
             Description = source.Description,
@@ -20,10 +20,10 @@ public static partial class EventCreateOrUpdate
             TimeEventEnded = source.TimeEventEnded,
 
             UserId = userId,
-            GroupEventId = groupEventId
+            TopicId = topicId
         };
 
-        public static void Map(Event destination, EventDto source, string userId, long? groupEventId)
+        public static void Map(Event destination, EventDto source, string userId, long? topicId)
         {
             destination.Name = source.Name;
             destination.Description = source.Description;
@@ -36,7 +36,7 @@ public static partial class EventCreateOrUpdate
             destination.TimeEventEnded = source.TimeEventEnded;
 
             destination.UserId = userId;
-            destination.GroupEventId = groupEventId;
+            destination.TopicId = topicId;
         }
     }
 }

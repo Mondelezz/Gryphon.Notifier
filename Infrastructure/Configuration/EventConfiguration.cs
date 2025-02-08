@@ -1,4 +1,4 @@
-using Domain.Models.Event;
+using Domain.Models;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Configuration;
@@ -9,8 +9,8 @@ internal class EventConfiguration : BaseConfiguration<Event>
     {
         base.Configure(builder);
 
-        builder.HasOne(e => e.GroupEvent)
+        builder.HasOne(e => e.Topic)
             .WithMany(ge => ge.Events)
-            .HasForeignKey(e => e.GroupEventId);
+            .HasForeignKey(e => e.TopicId);
     }
 }

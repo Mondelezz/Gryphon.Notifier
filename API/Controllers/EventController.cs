@@ -19,36 +19,36 @@ public class EventController(IMediator mediator) : ControllerBase
     /// </summary>
     /// <param name="requestDto">Событие</param>
     /// <param name="eventId">Идентификатор события</param>
-    /// <param name="groupEventId">Идентификатор группы, в которой создаётся событие</param>
+    /// <param name="topicId">Идентификатор топика, в котором создаётся событие</param>
     /// <param name="currentUserId">Идентификатор текущего пользователя</param>
     /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>Идентификатор созданной или обновлённой сущности</returns>
     [HttpPost("create-or-update-event")]
     public async Task<ActionResult<long>> CreateOrUpdateEventAsync(
-        EventCreateOrUpdate.RequestDto requestDto,
+        CreateOrUpdateEvent.RequestDto requestDto,
         long? eventId,
-        long? groupEventId,
+        long? topicId,
         string currentUserId,
         CancellationToken cancellationToken = default) => await mediator.Send(
-            new EventCreateOrUpdate.Command(requestDto, eventId, groupEventId, currentUserId), cancellationToken);
+            new CreateOrUpdateEvent.Command(requestDto, eventId, topicId, currentUserId), cancellationToken);
 
     /// <summary>
-    /// Добавляет событие к указанной группе
+    /// Добавляет событие в топик
     /// </summary>
     /// <param name="currentUserId">Идентификатор текущего пользователя</param>
-    /// <param name="groupEventId">Идентификатор группы, куда следует переместить событие</param>
+    /// <param name="topicId">Идентификатор топика, куда следует переместить событие</param>
     /// <param name="eventId">Идентификатор события</param>
     /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>Идентификатор добавленного события</returns>
-    [HttpPost("add-to-group")]
-    public async Task<ActionResult<long>> AddEventToGroupEvent(
+    [HttpPost("add-event-to-topic")]
+    public async Task<ActionResult<long>> AddEventToTopic(
         string currentUserId,
-        long groupEventId,
+        long topicId,
         long eventId,
         CancellationToken cancellationToken = default) => await mediator.Send(
-            new AddEventToGroupEvent.Command(
+            new AddEventToTopic.Command(
                 currentUserId,
-                groupEventId,
+                topicId,
                 eventId), cancellationToken);
 
     /// <summary>
@@ -59,11 +59,11 @@ public class EventController(IMediator mediator) : ControllerBase
     /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>Событие</returns>
     [HttpGet("{eventId}")]
-    public async Task<EventGet.ResponseDto> GetEventAsync(
+    public async Task<GetEvent.ResponseDto> GetEventAsync(
         string currentUserId,
         long eventId,
         CancellationToken cancellationToken = default) => await mediator.Send(
-            new EventGet.Query(currentUserId, eventId), cancellationToken);
+            new GetEvent.Query(currentUserId, eventId), cancellationToken);
 
     /// <summary>
     /// Получение списка событий с возможностью филтрации, сортировки и пагинации
@@ -77,15 +77,15 @@ public class EventController(IMediator mediator) : ControllerBase
     /// <param name="cancellationToken">Токен отмены.</param>
     /// <returns>Список событий</returns>
     [HttpGet]
-    public async Task<EventListGet.ResponseDto> GetEventListAsync(
+    public async Task<GetListEvent.ResponseDto> GetListEventAsync(
         string currentUserId,
         [FromQuery][Range(1, 100)] int offset = 10,
         [FromQuery][Range(0, int.MaxValue)] int skipCount = 0,
-        [FromQuery] EventListGet.Sorting sorting = EventListGet.Sorting.DateEvent,
+        [FromQuery] GetListEvent.Sorting sorting = GetListEvent.Sorting.DateEvent,
         [FromQuery] bool sortByDescending = false,
-        [FromQuery] EventListGet.RequestFilter? requestFilter = default,
+        [FromQuery] GetListEvent.RequestFilter? requestFilter = default,
         CancellationToken cancellationToken = default) => await mediator.Send(
-            new EventListGet.Query(
+            new GetListEvent.Query(
                 currentUserId,
                 offset, skipCount,
                 sorting,

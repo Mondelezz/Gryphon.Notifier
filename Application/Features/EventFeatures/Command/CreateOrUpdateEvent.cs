@@ -9,19 +9,19 @@ namespace Application.Features.EventFeatures.Command;
 /// <summary>
 /// Отвечает за создание или обновление события
 /// </summary>
-public static partial class EventCreateOrUpdate
+public static partial class CreateOrUpdateEvent
 {
     /// <summary>
     /// Команда
     /// </summary>
     /// <param name="RequestDto">Модель создаваемого события</param>
     /// <param name="EventId">Идентификатор обновляемого события</param>
-    /// <param name="GroupEventId">Идентификатор группы, в которой создаётся или обновляется событие</param>
+    /// <param name="TopicId">Идентификатор топика, в котором создаётся или обновляется событие</param>
     /// <param name="CurrentUserId">Идентификатор текущего пользователя</param>
     public record Command(
         RequestDto RequestDto,
         long? EventId,
-        long? GroupEventId,
+        long? TopicId,
         string CurrentUserId) : ICommandRequest<long>;
 
     public class Handler(CommandDbContext commandDbContext) : IRequestHandler<Command, long>
@@ -33,7 +33,7 @@ public static partial class EventCreateOrUpdate
 
         private async ValueTask<long> CreateEventAsync(Command request, CancellationToken cancellationToken)
         {
-            Event eventDb = Mapper.Map(request.RequestDto.EventDto, request.CurrentUserId, request.GroupEventId);
+            Event eventDb = Mapper.Map(request.RequestDto.EventDto, request.CurrentUserId, request.TopicId);
 
             // В случае, если событие уже прошло, то мы его помечаем как завершённое. 
             if (eventDb.DateEvent < DateTime.UtcNow)
@@ -55,7 +55,7 @@ public static partial class EventCreateOrUpdate
                 ?? throw new EntityNotFoundException(request.EventId!.Value, request.CurrentUserId, "event", "user");
 
             // Обновление полей сущности
-            Mapper.Map(eventDb, request.RequestDto.EventDto, request.CurrentUserId, request.GroupEventId);
+            Mapper.Map(eventDb, request.RequestDto.EventDto, request.CurrentUserId, request.TopicId);
 
             // В случае, если событие уже прошло, то мы его помечаем как завершённое. 
             if (eventDb.DateEvent < DateTime.UtcNow)

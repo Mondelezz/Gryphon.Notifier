@@ -2,7 +2,7 @@ using Riok.Mapperly.Abstractions;
 
 namespace Application.Features.EventFeatures.Query;
 
-public static partial class EventListGet
+public static partial class GetListEvent
 {
     [Mapper]
     public static partial class Mapper
@@ -18,11 +18,11 @@ public static partial class EventListGet
                 eventdB.DateEvent,
                 eventdB.CreateDate,
                 eventdB.UpdateDate,
-                eventdB.GroupEvent != null
-                ? Map(eventdB.GroupEvent)
+                eventdB.Topic != null
+                ? Map(eventdB.Topic)
                 : null))
             .ToList();
 
-        public static GroupEventDto Map(GroupEvent source) => new(source.Id, source.Name);
+        public static TopicDto Map(Topic source) => new(source.Id, source.Name);
     }
 }

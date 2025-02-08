@@ -10,7 +10,7 @@ namespace Application.Features.EventFeatures.Query;
 /// Отвечает за получение списка событий с возможностью фильтрации, сортировки и пагинации
 /// в том числе идёт получение общего количества событий, количества активных и завершённых событий
 /// </summary>
-public static partial class EventListGet
+public static partial class GetListEvent
 {
     public record Query(
             string UserId,
@@ -26,7 +26,7 @@ public static partial class EventListGet
         {
             IQueryable<Event> query = queryDbContext.Events
                 .Where(e => e.UserId == request.UserId)
-                .Include(e => e.GroupEvent)
+                .Include(e => e.Topic)
                 .AsQueryable();
 
             ApplyFilters(request.Filter, ref query);
@@ -82,9 +82,9 @@ public static partial class EventListGet
                     EF.Functions.ILike(e.Description ?? "", $"%{filter.SearchTermFilter}%"));
             }
 
-            if (filter.GroupEventId is not null)
+            if (filter.TopicId is not null)
             {
-                query = query.Where(e => e.GroupEventId == filter.GroupEventId.Value);
+                query = query.Where(e => e.TopicId == filter.TopicId.Value);
             }
 
             if (filter.IsCompleted is not null)

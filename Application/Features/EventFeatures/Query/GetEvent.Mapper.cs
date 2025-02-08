@@ -1,9 +1,8 @@
-using Domain.Models.Event;
 using Riok.Mapperly.Abstractions;
 
 namespace Application.Features.EventFeatures.Query;
 
-public static partial class EventGet
+public static partial class GetEvent
 {
     [Mapper]
     public static partial class Mapper
@@ -15,7 +14,7 @@ public static partial class EventGet
             source.Importance,
             source.Price,
             source.IsIterative,
-            source.GroupEventId,
+            source.TopicId,
             source.UserId,
             source.DateEvent,
             source.CreateDate,

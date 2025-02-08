@@ -1,14 +1,14 @@
 namespace Domain.Enums;
 
-public enum GroupEventType
+public enum TopicType
 {
     /// <summary>
-    /// Стандартная группа
+    /// Стандартный топик
     /// </summary>
     Default = 0,
 
     /// <summary>
-    /// Умная группа
+    /// Интеллектуальный топик
     /// </summary>
     Smart = 5
 }

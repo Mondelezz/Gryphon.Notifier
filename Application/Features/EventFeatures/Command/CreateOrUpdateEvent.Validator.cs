@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace Application.Features.EventFeatures.Command;
 
-public static partial class EventCreateOrUpdate
+public static partial class CreateOrUpdateEvent
 {
     public class Validator : AbstractValidator<Command>
     {

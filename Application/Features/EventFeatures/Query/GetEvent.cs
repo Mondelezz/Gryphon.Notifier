@@ -9,7 +9,7 @@ namespace Application.Features.EventFeatures.Query;
 /// <summary>
 /// Отвечает за получение события
 /// </summary>
-public static partial class EventGet
+public static partial class GetEvent
 {
     public record Query(
         string UserId,

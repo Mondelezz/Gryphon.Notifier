@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace Application.Features.EventFeatures.Command;
 
-public static partial class GroupEventCreateOrUpdate
+public static partial class CreateOrUpdateTopic
 {
     public class Validator : AbstractValidator<Command>
     {
@@ -17,21 +17,21 @@ public static partial class GroupEventCreateOrUpdate
         {
             public ValidatorRequestDto()
             {
-                RuleFor(request => request.GroupEventDto)
+                RuleFor(request => request.TopicDto)
                     .NotNull()
-                    .SetValidator(new ValidatorGroupEventDto());
+                    .SetValidator(new ValidatorTopicDto());
             }
         }
 
-        public class ValidatorGroupEventDto : AbstractValidator<GroupEventDto>
+        public class ValidatorTopicDto : AbstractValidator<TopicDto>
         {
-            public ValidatorGroupEventDto()
+            public ValidatorTopicDto()
             {
                 RuleFor(o => o.Name)
                     .MinimumLength(1)
-                        .WithMessage($"Минимальная длина названия группы 1 символ")
+                        .WithMessage("Минимальная длина названия топика 1 символ")
                     .MaximumLength(30)
-                        .WithMessage($"Максимальная длина названия группы 30 символов");
+                        .WithMessage("Максимальная длина названия топика 30 символов");
             }
         }
     }

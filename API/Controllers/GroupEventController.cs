@@ -6,41 +6,41 @@ using Application.Features.EventFeatures.Query;
 namespace API.Controllers;
 
 /// <summary>
-/// Отвечает за управление группами для событий
+/// Отвечает за управление топиками
 /// </summary>
 /// <param name="mediator">mediator</param>
-[Route("api/v1/group-events")]
+[Route("api/v1/topic")]
 [ApiController]
-public class GroupEventController(IMediator mediator) : ControllerBase
+public class TopicController(IMediator mediator) : ControllerBase
 {
     /// <summary>
-    /// Создание или редактирование группы для событий
+    /// Создание или редактирование топика
     /// </summary>
-    /// <param name="requestDto">Группа для событий</param>
+    /// <param name="requestDto">Топик</param>
     /// <param name="currentUserId">Идентификатор текущего пользователя</param>
-    /// <param name="groupEventId">Идентификатор группы</param>
+    /// <param name="topicId">Идентификатор топика</param>
     /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>Идентификатор созданной или обновлённой сущности</returns>
-    [HttpPost("create-or-update-group")]
-    public async Task<ActionResult<long>> CreateOrUpdateGroupAsync(
-        GroupEventCreateOrUpdate.RequestDto requestDto,
+    [HttpPost("create-or-update-topic")]
+    public async Task<ActionResult<long>> CreateOrUpdateTopicAsync(
+        CreateOrUpdateTopic.RequestDto requestDto,
         string currentUserId,
-        long? groupEventId,
+        long? topicId,
         CancellationToken cancellationToken = default) => await mediator.Send
-        (new GroupEventCreateOrUpdate.Command(
-            currentUserId,
-            groupEventId,
-            requestDto), cancellationToken);
+            (new CreateOrUpdateTopic.Command(
+                currentUserId,
+                topicId,
+                requestDto), cancellationToken);
 
     /// <summary>
-    /// Получение списка групп для событий
+    /// Получение списка топиков
     /// </summary>
     /// <param name="currentUserId">Идентификатор текущего пользователя</param>
     /// <param name="cancellationToken">Токен отмены</param>
-    /// <returns>Список групп</returns>
+    /// <returns>Список топиков</returns>
     [HttpGet]
-    public async Task<ActionResult<GroupEventListGet.ResponseDto>> GetGroupEventListAsync(
+    public async Task<ActionResult<TopicListGet.ResponseDto>> GetListTopicAsync(
         string currentUserId,
         CancellationToken cancellationToken = default) => await mediator.Send
-        (new GroupEventListGet.Query(currentUserId), cancellationToken);
+            (new TopicListGet.Query(currentUserId), cancellationToken);
 }

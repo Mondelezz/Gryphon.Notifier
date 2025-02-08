@@ -1,6 +1,5 @@
 using Domain.Common;
-
-using Domain.Models.Event;
+using Domain.Models;
 
 using Infrastructure.Configuration;
 
@@ -20,8 +19,8 @@ public abstract partial class BaseDbContext(DbContextOptions options) : DbContex
             .Property(e => e.Importance)
             .HasConversion<string>();
 
-        modelBuilder.Entity<GroupEvent>()
-            .Property(e => e.GroupEventType)
+        modelBuilder.Entity<Topic>()
+            .Property(e => e.TopicType)
             .HasConversion<string>();
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(BaseConfiguration<>).Assembly);

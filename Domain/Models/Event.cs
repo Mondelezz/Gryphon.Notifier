@@ -1,7 +1,7 @@
 using Domain.Common;
 using Domain.Enums;
 
-namespace Domain.Models.Event;
+namespace Domain.Models;
 
 public class Event : EntityBase, IEntityState
 {
@@ -28,29 +28,31 @@ public class Event : EntityBase, IEntityState
     /// <summary>
     /// Время начала события (для событий, которые начинаются с определённого момента времени) Пример: Тренировка
     /// </summary>
-    public DateTime? TimeEventStart { get; set; }
+    public TimeOnly? TimeEventStart { get; set; }
 
     /// <summary>
-    /// Время окончания события (для событий, которые заканчиваются в определённый момент времени) Пример: Тренировка
+    /// Время окончания события
+    /// (для событий, которые заканчиваются в определённый момент времени) Пример: Тренировка
     /// </summary>
-    public DateTime? TimeEventEnded { get; set; }
+    public TimeOnly? TimeEventEnded { get; set; }
 
     /// <summary>
-    /// Стоимость события ( услуга / тариф )
+    /// Цена, которая принадлежит событию ( услуга / тариф )
     /// </summary>
     public decimal? Price { get; set; }
 
     /// <summary>
     /// Повторяющееся событие в определённую дату
+    /// (система автоматически пересоздаёт завершённые события в зависимости от настройки периодичности)
     /// </summary>
     public bool IsIterative { get; set; }
 
     /// <summary>
-    /// Группа
+    /// Топик
     /// </summary>
-    public GroupEvent? GroupEvent { get; set; }
+    public Topic? Topic { get; set; }
 
-    public long? GroupEventId { get; set; }
+    public long? TopicId { get; set; }
 
     /// <summary>
     /// Идентификатор пользователя

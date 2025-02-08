@@ -7,9 +7,9 @@ using Mediator;
 namespace Application.Features.EventFeatures.Query;
 
 /// <summary>
-/// Отвечает за получение списка групп для событий
+/// Отвечает за получение списка топиков
 /// </summary>
-public static partial class GroupEventListGet
+public static partial class GetListTopic
 {
     public record Query(
         string CurrentUserId) : IQueryRequest<ResponseDto>;
@@ -18,19 +18,19 @@ public static partial class GroupEventListGet
     {
         public async ValueTask<ResponseDto> Handle(Query request, CancellationToken cancellationToken)
         {
-            IReadOnlyList<GroupEvent> groupEventsDb = await queryDbContext.GroupEvents
+            IReadOnlyList<Topic> topicDb = await queryDbContext.Topics
                 .Where(ge => ge.UserId == request.CurrentUserId && !ge.IsDeleted)
                 .OrderBy(ge => ge.CreateDate)
                 .ToListAsync(cancellationToken);
 
-            int totalCount = groupEventsDb.Count;
+            int totalCount = topicDb.Count;
 
             if (totalCount == 0)
             {
                 return new ResponseDto([], totalCount);
             }
 
-            return new ResponseDto(Mapper.Map(groupEventsDb), totalCount);
+            return new ResponseDto(Mapper.Map(topicDb), totalCount);
         }
     }
 }

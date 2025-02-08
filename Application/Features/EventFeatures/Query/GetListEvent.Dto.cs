@@ -1,8 +1,13 @@
 namespace Application.Features.EventFeatures.Query;
 
-public static partial class EventListGet
+public static partial class GetListEvent
 {
-    public record ResponseDto(IReadOnlyList<EventDto> EventDtos, int TotalCount, int ActualEventsCount, int EndedEventsCount, decimal TotalPrice);
+    public record ResponseDto(
+        IReadOnlyList<EventDto> EventDtos,
+        int TotalCount,
+        int ActualEventsCount,
+        int EndedEventsCount,
+        decimal TotalPrice);
 
     public record EventDto(
         long EventId,
@@ -14,22 +19,22 @@ public static partial class EventListGet
         DateTime DateEvent,
         DateTime CreateDate,
         DateTime UpdateDate,
-        GroupEventDto? GroupEventDto);
+        TopicDto? TopicDto);
 
-    public record GroupEventDto(
-        long GroupEventId,
+    public record TopicDto(
+        long TopicId,
         string Name);
 
     /// <summary>
     /// Фильтры
     /// </summary>
     /// <param name="SearchTermFilter">Поисковый фильтр</param>
-    /// <param name="GroupEventId">Идентификатор группы, к которой принадлежат события</param>
+    /// <param name="TopicId">Идентификатор топика, к которому принадлежат события</param>
     /// <param name="IndicatedPriceFilter">Указана цена</param>
     /// <param name="IsCompleted">Завершено</param>
     public record RequestFilter(
         string? SearchTermFilter = default,
-        long? GroupEventId = default,
+        long? TopicId = default,
         bool? IndicatedPriceFilter = default,
         bool? IsCompleted = default);
 

@@ -1,5 +1,4 @@
 using Application.Common;
-
 using Infrastructure.DbContexts;
 
 using Mediator;
@@ -7,24 +6,24 @@ using Mediator;
 namespace Application.Features.EventFeatures.Command;
 
 /// <summary>
-/// Отвечает за добавление события к какой-либо группе
+/// Отвечает за добавление события в топик
 /// </summary>
-public static partial class AddEventToGroupEvent
+public static partial class AddEventToTopic
 {
     public record Command(
         string CurrentUserId,
-        long GroupEventId,
+        long TopicId,
         long EventId) : ICommandRequest<long>;
 
     public class Handler(CommandDbContext commandDbContext) : IRequestHandler<Command, long>
     {
         public async ValueTask<long> Handle(Command request, CancellationToken cancellationToken)
         {
-            GroupEvent groupEventDb = await GetGroupEventAsync(request, cancellationToken);
+            Topic topicDb = await GetTopicAsync(request, cancellationToken);
 
             Event eventDb = await GetEventAsync(request, cancellationToken);
 
-            eventDb.GroupEventId = groupEventDb.Id;
+            eventDb.TopicId = topicDb.Id;
 
             commandDbContext.Update(eventDb);
 
@@ -42,12 +41,12 @@ public static partial class AddEventToGroupEvent
                 ?? throw new EntityNotFoundException(request.EventId, request.CurrentUserId, "event", "user");
 
 
-        private async Task<GroupEvent> GetGroupEventAsync(Command request, CancellationToken cancellationToken) =>
-            await commandDbContext.GroupEvents
-                .Where(ge => ge.Id == request.GroupEventId &&
-                             ge.UserId == request.CurrentUserId &&
-                            !ge.IsDeleted)
+        private async Task<Topic> GetTopicAsync(Command request, CancellationToken cancellationToken) =>
+            await commandDbContext.Topics
+                .Where(t => t.Id == request.TopicId &&
+                             t.UserId == request.CurrentUserId &&
+                            !t.IsDeleted)
                 .FirstOrDefaultAsync(cancellationToken)
-                ?? throw new EntityNotFoundException(request.GroupEventId, request.CurrentUserId, "groupEvent", "user");
+                ?? throw new EntityNotFoundException(request.TopicId, request.CurrentUserId, "topic", "user");
     }
 }
