@@ -3,8 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Application.Features.EventFeatures.Query;
 
-using FluentAssertions;
-
 namespace Gryphon.IntegrationTests.EventFeaturesTests;
 
 public class GetListEventTest : IClassFixture<ReadonlyIntegrationTestWebAppFactory>
@@ -35,7 +33,7 @@ public class GetListEventTest : IClassFixture<ReadonlyIntegrationTestWebAppFacto
         GetListEvent.ResponseDto result = await _mediator.Send(query);
 
         // Assert
-        result.EventDtos.Should().OnlyContain(e => e.Price > 0);
+        Assert.True(result.EventDtos.All(e => e.Price > 0));
     }
 
     [Fact]
@@ -55,7 +53,7 @@ public class GetListEventTest : IClassFixture<ReadonlyIntegrationTestWebAppFacto
         GetListEvent.ResponseDto result = await _mediator.Send(query);
 
         // Assert
-        result.EventDtos.Should().OnlyContain(e => e.IsCompleted);
+        Assert.True(result.EventDtos.All(e => e.IsCompleted));
     }
 
     [Fact]
@@ -75,7 +73,7 @@ public class GetListEventTest : IClassFixture<ReadonlyIntegrationTestWebAppFacto
         GetListEvent.ResponseDto result = await _mediator.Send(query);
 
         // Assert
-        result.EventDtos.Should().OnlyContain(e => e.TopicDto!.TopicId == query.Filter!.TopicId);
+        Assert.True(result.EventDtos.All(e => e.TopicDto!.TopicId == query.Filter!.TopicId));
     }
 
     [Fact]
@@ -95,7 +93,7 @@ public class GetListEventTest : IClassFixture<ReadonlyIntegrationTestWebAppFacto
         GetListEvent.ResponseDto result = await _mediator.Send(query);
 
         // Assert
-        result.ActualEventsCount.Should().Be(1); // TODO: Поменять, если бэкап данных изменился
+        Assert.Equal(1, result.ActualEventsCount); // TODO: Поменять, если бэкап данных изменился
     }
 
     [Fact]
@@ -115,7 +113,7 @@ public class GetListEventTest : IClassFixture<ReadonlyIntegrationTestWebAppFacto
         GetListEvent.ResponseDto result = await _mediator.Send(query);
 
         // Assert
-        result.EndedEventsCount.Should().Be(5); // TODO: Поменять, если бэкап данных изменился
+        Assert.Equal(5, result.EndedEventsCount); // TODO: Поменять, если бэкап данных изменился
     }
 
     [Fact]
@@ -135,7 +133,7 @@ public class GetListEventTest : IClassFixture<ReadonlyIntegrationTestWebAppFacto
         GetListEvent.ResponseDto result = await _mediator.Send(query);
 
         // Assert
-        result.TotalCount.Should().Be(6); // TODO: Поменять, если бэкап данных изменился
+        Assert.Equal(6, result.TotalCount); // TODO: Поменять, если бэкап данных изменился
     }
 
     [Fact]
@@ -155,6 +153,6 @@ public class GetListEventTest : IClassFixture<ReadonlyIntegrationTestWebAppFacto
         GetListEvent.ResponseDto result = await _mediator.Send(query);
 
         // Assert
-        result.TotalPrice.Should().Be(1002); // TODO: Поменять, если бэкап данных изменился
+        Assert.Equal(1002, result.TotalPrice); // TODO: Поменять, если бэкап данных изменился
     }
 }
