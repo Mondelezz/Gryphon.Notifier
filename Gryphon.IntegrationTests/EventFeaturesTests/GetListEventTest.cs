@@ -139,7 +139,7 @@ public class GetListEventTest : IClassFixture<ReadonlyIntegrationTestWebAppFacto
     }
 
     [Fact]
-    public async Task Handle_Calculates_TotalPrice_Events_InGroup_ReturnsCorrectResults()
+    public async Task Handle_Calculates_TotalPrice_Events_InTopic_ReturnsCorrectResults()
     {
         // Arrange
         GetListEvent.Query query = new(
