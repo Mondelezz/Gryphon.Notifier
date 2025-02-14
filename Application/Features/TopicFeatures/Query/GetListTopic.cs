@@ -4,7 +4,7 @@ using Infrastructure.DbContexts;
 
 using Mediator;
 
-namespace Application.Features.EventFeatures.Query;
+namespace Application.Features.TopicFeatures.Query;
 
 /// <summary>
 /// Отвечает за получение списка топиков
@@ -19,8 +19,8 @@ public static partial class GetListTopic
         public async ValueTask<ResponseDto> Handle(Query request, CancellationToken cancellationToken)
         {
             IReadOnlyList<Topic> topicDb = await queryDbContext.Topics
-                .Where(ge => ge.UserId == request.CurrentUserId && !ge.IsDeleted)
-                .OrderBy(ge => ge.CreateDate)
+                .Where(t => t.UserId == request.CurrentUserId && !t.IsDeleted)
+                .OrderBy(t => t.CreateDate)
                 .ToListAsync(cancellationToken);
 
             int totalCount = topicDb.Count;

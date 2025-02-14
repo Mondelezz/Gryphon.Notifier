@@ -3,7 +3,7 @@ using Infrastructure.DbContexts;
 
 using Mediator;
 
-namespace Application.Features.EventFeatures.Command;
+namespace Application.Features.TopicFeatures.Command;
 
 /// <summary>
 /// Отвечает за создание/обновление топика

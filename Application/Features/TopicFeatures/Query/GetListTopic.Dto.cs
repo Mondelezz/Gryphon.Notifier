@@ -1,4 +1,4 @@
-namespace Application.Features.EventFeatures.Query;
+namespace Application.Features.TopicFeatures.Query;
 
 public static partial class GetListTopic
 {

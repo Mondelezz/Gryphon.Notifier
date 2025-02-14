@@ -1,7 +1,7 @@
 using Mediator;
 using Microsoft.AspNetCore.Mvc;
-using Application.Features.EventFeatures.Command;
-using Application.Features.EventFeatures.Query;
+using Application.Features.TopicFeatures.Command;
+using Application.Features.TopicFeatures.Query;
 
 namespace API.Controllers;
 

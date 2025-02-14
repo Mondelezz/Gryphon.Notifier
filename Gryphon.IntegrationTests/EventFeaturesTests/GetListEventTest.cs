@@ -1,19 +1,11 @@
-using Mediator;
-using Microsoft.Extensions.DependencyInjection;
-
 using Application.Features.EventFeatures.Query;
 
 namespace Gryphon.IntegrationTests.EventFeaturesTests;
 
-public class GetListEventTest : IClassFixture<ReadonlyIntegrationTestWebAppFactory>
+public class GetListEventTest : BaseReadonlyClassFixture
 {
-    private readonly IMediator _mediator;
-    private readonly IServiceScope _scope;
-
-    public GetListEventTest(ReadonlyIntegrationTestWebAppFactory factory)
+    public GetListEventTest(ReadonlyIntegrationTestWebAppFactory factory) : base(factory)
     {
-        _scope = factory.Services.CreateScope();
-        _mediator = _scope.ServiceProvider.GetRequiredService<IMediator>();
     }
 
     [Fact]

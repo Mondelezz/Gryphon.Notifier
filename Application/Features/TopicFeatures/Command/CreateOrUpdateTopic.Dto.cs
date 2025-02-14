@@ -1,4 +1,4 @@
-namespace Application.Features.EventFeatures.Command;
+namespace Application.Features.TopicFeatures.Command;
 
 public static partial class CreateOrUpdateTopic
 {

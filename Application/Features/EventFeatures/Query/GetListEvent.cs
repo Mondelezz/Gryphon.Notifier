@@ -25,7 +25,7 @@ public static partial class GetListEvent
         public async ValueTask<ResponseDto> Handle(Query request, CancellationToken cancellationToken)
         {
             IQueryable<Event> query = queryDbContext.Events
-                .Where(e => e.UserId == request.UserId)
+                .Where(e => e.UserId == request.UserId && !e.IsDeleted)
                 .Include(e => e.Topic)
                 .AsQueryable();
 
