@@ -2,7 +2,7 @@ using Application.Features.EventFeatures.Query;
 
 namespace Gryphon.IntegrationTests.EventFeaturesTests;
 
-public class GetListEventTest : BaseReadonlyClassFixture
+public sealed class GetListEventTest : BaseReadonlyClassFixture
 {
     public GetListEventTest(ReadonlyIntegrationTestWebAppFactory factory) : base(factory)
     {

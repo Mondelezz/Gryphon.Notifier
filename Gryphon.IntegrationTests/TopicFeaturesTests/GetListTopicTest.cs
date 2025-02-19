@@ -2,7 +2,7 @@ using Application.Features.TopicFeatures.Query;
 
 namespace Gryphon.IntegrationTests.TopicFeaturesTests;
 
-public class GetListTopicTest : BaseReadonlyClassFixture
+public sealed class GetListTopicTest : BaseReadonlyClassFixture
 {
     public GetListTopicTest(ReadonlyIntegrationTestWebAppFactory factory) : base(factory)
     {

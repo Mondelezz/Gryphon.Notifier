@@ -52,7 +52,7 @@ public static partial class CreateOrUpdateEvent
             Event eventDb = await commandDbContext.Events
                 .Where(e => e.Id == request.EventId && e.UserId == request.CurrentUserId)
                 .FirstOrDefaultAsync(cancellationToken)
-                ?? throw new EntityNotFoundException(request.EventId!.Value, request.CurrentUserId, "event", "user");
+                ?? throw new EntityNotFoundException(request.EventId!.Value, request.CurrentUserId, "eventId", "userId");
 
             // Обновление полей сущности
             Mapper.Map(eventDb, request.RequestDto.EventDto, request.CurrentUserId, request.TopicId);
