@@ -87,7 +87,7 @@ public sealed class CreateOrUpdateEventTest : BaseWriteOnlyClassFixture
 
         Assert.Equal(eventCreatedId, eventUpdatedId);
 
-        Assert.NotEqual(commandCreate.RequestDto.EventDto.Name, updatedEventDto.EventDto.Name);
+        Assert.NotEqual(commandCreate.RequestDto.EventDto.Name, updatedEventDto.EventDto.Name); // Потому что обновляли только название
 
         Assert.Equal(commandCreate.RequestDto.EventDto.Description, updatedEventDto.EventDto.Description);
         Assert.Equal(commandCreate.RequestDto.EventDto.Importance, updatedEventDto.EventDto.Importance);

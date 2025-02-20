@@ -16,6 +16,10 @@ public static partial class GetEvent
             source.IsIterative,
             source.TopicId,
             source.UserId,
+            source.IsDeleted,
+            source.IsCompleted,
+            source.TimeEventStart,
+            source.TimeEventEnded,
             source.DateEvent,
             source.CreateDate,
             source.UpdateDate);

@@ -43,4 +43,18 @@ public class TopicController(IMediator mediator) : ControllerBase
         string currentUserId,
         CancellationToken cancellationToken = default) => await mediator.Send
             (new GetListTopic.Query(currentUserId), cancellationToken);
+
+    /// <summary>
+    /// Получение топика и входящих в него событий
+    /// </summary>
+    /// <param name="currentUserId">Идентификатор текущего пользователя</param>
+    /// <param name="topicId">Идентификатор топика</param>
+    /// <param name="cancellationToken">Токен отмены</param>
+    /// <returns>Список топиков</returns>
+    [HttpGet("topicId")]
+    public async Task<ActionResult<GetTopic.ResponseDto>> GetTopicAsync(
+        string currentUserId,
+        long topicId,
+        CancellationToken cancellationToken = default) => await mediator.Send
+            (new GetTopic.Query(currentUserId, topicId), cancellationToken);
 }

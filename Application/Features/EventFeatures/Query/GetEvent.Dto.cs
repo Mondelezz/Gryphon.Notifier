@@ -13,6 +13,10 @@ public static partial class GetEvent
         bool IsIterative,
         long? TopicId,
         string UserId,
+        bool IsDeleted,
+        bool IsCompleted,
+        TimeOnly? TimeEventStart,
+        TimeOnly? TimeEventEnded,
         DateTime DateEvent,
         DateTime CreateDate,
         DateTime UpdateDate);
