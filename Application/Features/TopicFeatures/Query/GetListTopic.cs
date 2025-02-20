@@ -20,7 +20,7 @@ public static partial class GetListTopic
         {
             IReadOnlyList<Topic> topicDb = await queryDbContext.Topics
                 .Where(t => t.UserId == request.CurrentUserId && !t.IsDeleted)
-                .OrderByDescending(t => t.UpdateDate)
+                    .OrderByDescending(t => t.UpdateDate)
                 .ToListAsync(cancellationToken);
 
             int totalCount = topicDb.Count;
