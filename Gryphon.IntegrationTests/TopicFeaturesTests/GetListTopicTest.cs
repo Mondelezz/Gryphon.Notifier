@@ -26,7 +26,8 @@ public sealed class GetListTopicTest : BaseReadonlyClassFixture
         {
             for (int i = 0; i < result.TopicDtos.Count - 1; i++)
             {
-                Assert.True(result.TopicDtos[i].UpdateDate >= result.TopicDtos[i + 1].UpdateDate, $"Элемент {i} должен быть новее или равен элементу {i + 1}");
+                Assert.True(result.TopicDtos[i].UpdateDate >= result.TopicDtos[i + 1].UpdateDate,
+                    $"Элемент {i} должен быть новее или равен элементу {i + 1}");
             }
         }
     }
