@@ -58,10 +58,7 @@ public static partial class CreateOrUpdateEvent
             Mapper.Map(eventDb, request.RequestDto.EventDto, request.CurrentUserId, request.TopicId);
 
             // В случае, если событие уже прошло, то мы его помечаем как завершённое. 
-            if (eventDb.DateEvent < DateTime.UtcNow)
-            {
-                eventDb.IsCompleted = true;
-            }
+            eventDb.IsCompleted = eventDb.DateEvent < DateTime.UtcNow;
 
             commandDbContext.Update(eventDb);
 
