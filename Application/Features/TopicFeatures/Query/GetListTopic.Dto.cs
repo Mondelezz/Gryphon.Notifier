@@ -6,7 +6,7 @@ public static partial class GetListTopic
 
     public record TopicDto(
         long TopicId,
-        string UserId,
+        long UserId,
         string Name,
         DateTime CreateDate,
         DateTime UpdateDate);

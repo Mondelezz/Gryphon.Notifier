@@ -29,7 +29,7 @@ public sealed class CreateOrUpdateEventTest : BaseWriteOnlyClassFixture
                     IsIterative: false)),
             EventId: null,
             TopicId: null,
-            CurrentUserId: "1");
+            CurrentUserId: 1);
 
         // Arrange
         long eventId = await _mediator.Send(command);
@@ -58,7 +58,7 @@ public sealed class CreateOrUpdateEventTest : BaseWriteOnlyClassFixture
                     IsIterative: false)),
             EventId: null,
             TopicId: null,
-            CurrentUserId: "1");
+            CurrentUserId: 1);
 
         long eventCreatedId = await _mediator.Send(commandCreate);
 
@@ -75,7 +75,7 @@ public sealed class CreateOrUpdateEventTest : BaseWriteOnlyClassFixture
                     IsIterative: false)),
             EventId: eventCreatedId,
             TopicId: null,
-            CurrentUserId: "1");
+            CurrentUserId: 1);
 
         long eventUpdatedId = await _mediator.Send(commandUpdate);
 

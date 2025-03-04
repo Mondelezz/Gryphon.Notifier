@@ -26,7 +26,7 @@ public class Topic : EntityBase, IEntityState
     /// <summary>
     /// Идентификатор пользователя, который создал топик
     /// </summary>
-    public required string UserId { get; set; }
+    public required long UserId { get; set; }
 
     /// <summary>
     /// Сущность удалена

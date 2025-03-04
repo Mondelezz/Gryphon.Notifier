@@ -12,7 +12,7 @@ namespace Application.Features.EventFeatures.Query;
 public static partial class GetEvent
 {
     public record Query(
-        string UserId,
+        long UserId,
         long EventId) : IQueryRequest<ResponseDto>;
 
     public class Handler(QueryDbContext queryDbContext) : IRequestHandler<Query, ResponseDto>

@@ -13,7 +13,7 @@ public sealed class GetListTopicTest : BaseReadonlyClassFixture
     {
         // Arrange
         GetListTopic.Query query = new(
-            CurrentUserId: "1");
+            CurrentUserId: 1);
 
         // Act
         GetListTopic.ResponseDto result = await _mediator.Send(query);

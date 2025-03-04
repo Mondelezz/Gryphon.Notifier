@@ -22,7 +22,7 @@ public static partial class CreateOrUpdateEvent
         RequestDto RequestDto,
         long? EventId,
         long? TopicId,
-        string CurrentUserId) : ICommandRequest<long>;
+        long CurrentUserId) : ICommandRequest<long>;
 
     public class Handler(CommandDbContext commandDbContext) : IRequestHandler<Command, long>
     {

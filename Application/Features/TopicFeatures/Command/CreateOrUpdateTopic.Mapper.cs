@@ -7,7 +7,7 @@ public static partial class CreateOrUpdateTopic
     [Mapper]
     public static partial class Mapper
     {
-        public static Topic Map(TopicDto source, string userId) => new()
+        public static Topic Map(TopicDto source, long userId) => new()
         {
             Name = source.Name,
             TopicType = source.TopicType,

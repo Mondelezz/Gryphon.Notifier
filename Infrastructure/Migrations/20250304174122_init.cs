@@ -13,21 +13,21 @@ namespace Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "GroupEvents",
+                name: "Topics",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    GroupEventType = table.Column<string>(type: "text", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: false),
+                    TopicType = table.Column<string>(type: "text", nullable: false),
+                    UserId = table.Column<long>(type: "bigint", nullable: false),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "timezone('utc', current_timestamp)"),
                     UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "timezone('utc', current_timestamp)")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GroupEvents", x => x.Id);
+                    table.PrimaryKey("PK_Topics", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -40,12 +40,12 @@ namespace Infrastructure.Migrations
                     Description = table.Column<string>(type: "text", nullable: true),
                     Importance = table.Column<string>(type: "text", nullable: false),
                     DateEvent = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    TimeEventStart = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    TimeEventEnded = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    TimeEventStart = table.Column<TimeOnly>(type: "time without time zone", nullable: true),
+                    TimeEventEnded = table.Column<TimeOnly>(type: "time without time zone", nullable: true),
                     Price = table.Column<decimal>(type: "numeric", nullable: true),
                     IsIterative = table.Column<bool>(type: "boolean", nullable: false),
-                    GroupEventId = table.Column<long>(type: "bigint", nullable: true),
-                    UserId = table.Column<string>(type: "text", nullable: false),
+                    TopicId = table.Column<long>(type: "bigint", nullable: true),
+                    UserId = table.Column<long>(type: "bigint", nullable: false),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     IsCompleted = table.Column<bool>(type: "boolean", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "timezone('utc', current_timestamp)"),
@@ -55,16 +55,16 @@ namespace Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Events", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Events_GroupEvents_GroupEventId",
-                        column: x => x.GroupEventId,
-                        principalTable: "GroupEvents",
+                        name: "FK_Events_Topics_TopicId",
+                        column: x => x.TopicId,
+                        principalTable: "Topics",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Events_GroupEventId",
+                name: "IX_Events_TopicId",
                 table: "Events",
-                column: "GroupEventId");
+                column: "TopicId");
         }
 
         /// <inheritdoc />
@@ -74,7 +74,7 @@ namespace Infrastructure.Migrations
                 name: "Events");
 
             migrationBuilder.DropTable(
-                name: "GroupEvents");
+                name: "Topics");
         }
     }
 }

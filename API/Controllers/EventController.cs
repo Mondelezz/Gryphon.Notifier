@@ -28,7 +28,7 @@ public class EventController(IMediator mediator) : ControllerBase
         CreateOrUpdateEvent.RequestDto requestDto,
         long? eventId,
         long? topicId,
-        string currentUserId,
+        long currentUserId,
         CancellationToken cancellationToken = default) => await mediator.Send(
             new CreateOrUpdateEvent.Command(requestDto, eventId, topicId, currentUserId), cancellationToken);
 
@@ -42,7 +42,7 @@ public class EventController(IMediator mediator) : ControllerBase
     /// <returns>Идентификатор добавленного события</returns>
     [HttpPost("add-event-to-topic")]
     public async Task<ActionResult<long>> AddEventToTopic(
-        string currentUserId,
+        long currentUserId,
         long topicId,
         long eventId,
         CancellationToken cancellationToken = default) => await mediator.Send(
@@ -60,7 +60,7 @@ public class EventController(IMediator mediator) : ControllerBase
     /// <returns>Событие</returns>
     [HttpGet("{eventId}")]
     public async Task<GetEvent.ResponseDto> GetEventAsync(
-        string currentUserId,
+        long currentUserId,
         long eventId,
         CancellationToken cancellationToken = default) => await mediator.Send(
             new GetEvent.Query(currentUserId, eventId), cancellationToken);
@@ -78,7 +78,7 @@ public class EventController(IMediator mediator) : ControllerBase
     /// <returns>Список событий</returns>
     [HttpGet]
     public async Task<GetListEvent.ResponseDto> GetListEventAsync(
-        string currentUserId,
+        long currentUserId,
         [FromQuery][Range(1, 100)] int offset = 10,
         [FromQuery][Range(0, int.MaxValue)] int skipCount = 0,
         [FromQuery] GetListEvent.Sorting sorting = GetListEvent.Sorting.DateEvent,

@@ -8,10 +8,10 @@ namespace Application.Features.EventFeatures.Command;
 /// <summary>
 /// Отвечает за добавление события в топик
 /// </summary>
-public static partial class AddEventToTopic
+public static class AddEventToTopic
 {
     public record Command(
-        string CurrentUserId,
+        long CurrentUserId,
         long TopicId,
         long EventId) : ICommandRequest<long>;
 

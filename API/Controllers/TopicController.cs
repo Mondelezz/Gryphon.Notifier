@@ -24,7 +24,7 @@ public class TopicController(IMediator mediator) : ControllerBase
     [HttpPost("create-or-update-topic")]
     public async Task<ActionResult<long>> CreateOrUpdateTopicAsync(
         CreateOrUpdateTopic.RequestDto requestDto,
-        string currentUserId,
+        long currentUserId,
         long? topicId,
         CancellationToken cancellationToken = default) => await mediator.Send
             (new CreateOrUpdateTopic.Command(
@@ -40,7 +40,7 @@ public class TopicController(IMediator mediator) : ControllerBase
     /// <returns>Список топиков</returns>
     [HttpGet]
     public async Task<ActionResult<GetListTopic.ResponseDto>> GetListTopicAsync(
-        string currentUserId,
+        long currentUserId,
         CancellationToken cancellationToken = default) => await mediator.Send
             (new GetListTopic.Query(currentUserId), cancellationToken);
 
@@ -53,7 +53,7 @@ public class TopicController(IMediator mediator) : ControllerBase
     /// <returns>Список топиков</returns>
     [HttpGet("topicId")]
     public async Task<ActionResult<GetTopic.ResponseDto>> GetTopicAsync(
-        string currentUserId,
+        long currentUserId,
         long topicId,
         CancellationToken cancellationToken = default) => await mediator.Send
             (new GetTopic.Query(currentUserId, topicId), cancellationToken);

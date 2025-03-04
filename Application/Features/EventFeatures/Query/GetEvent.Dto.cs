@@ -12,7 +12,7 @@ public static partial class GetEvent
         decimal? Price,
         bool IsIterative,
         long? TopicId,
-        string UserId,
+        long UserId,
         bool IsDeleted,
         bool IsCompleted,
         TimeOnly? TimeEventStart,

@@ -15,7 +15,7 @@ public sealed class GetTopicTest : BaseReadonlyClassFixture
     public async Task GetTopicById_ShouldReturnTopic_WhenTopicExist(long topicId)
     {
         // Arrange
-        GetTopic.Query query = new("1", topicId);
+        GetTopic.Query query = new(1, topicId);
 
         // Act
         GetTopic.ResponseDto result = await _mediator.Send(query);
@@ -41,7 +41,7 @@ public sealed class GetTopicTest : BaseReadonlyClassFixture
     public async Task GetTopicById_ShouldReturnTopic_WhenTopicNotExist(long topicId)
     {
         // Arrange
-        GetTopic.Query query = new("1", topicId);
+        GetTopic.Query query = new(1, topicId);
 
         // Act && Assert
         EntityNotFoundException exception = await Assert.ThrowsAsync<EntityNotFoundException>(async () => await _mediator.Send(request: query));

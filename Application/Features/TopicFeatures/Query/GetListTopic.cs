@@ -12,7 +12,7 @@ namespace Application.Features.TopicFeatures.Query;
 public static partial class GetListTopic
 {
     public record Query(
-        string CurrentUserId) : IQueryRequest<ResponseDto>;
+        long CurrentUserId) : IQueryRequest<ResponseDto>;
 
     public class Handler(QueryDbContext queryDbContext) : IRequestHandler<Query, ResponseDto>
     {

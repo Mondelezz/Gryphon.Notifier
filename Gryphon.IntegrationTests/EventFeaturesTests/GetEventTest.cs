@@ -15,7 +15,7 @@ public sealed class GetEventTest : BaseReadonlyClassFixture
     public async Task GetEventById_ShouldReturnEvent_WhenEventExist(long eventId)
     {
         // Arrange
-        GetEvent.Query query = new("1", eventId);
+        GetEvent.Query query = new(1, eventId);
 
         // Act
         GetEvent.ResponseDto result = await _mediator.Send(query);
@@ -31,7 +31,7 @@ public sealed class GetEventTest : BaseReadonlyClassFixture
     public async Task GetEventById_ShouldReturnError_WhenEventNotExist(long eventId)
     {
         // Arrange
-        GetEvent.Query query = new("1", eventId);
+        GetEvent.Query query = new(1, eventId);
 
         // Act && Assert
         EntityNotFoundException exception = await Assert.ThrowsAsync<EntityNotFoundException>(async () => await _mediator.Send(request: query));

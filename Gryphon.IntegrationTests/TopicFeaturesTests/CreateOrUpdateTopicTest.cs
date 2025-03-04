@@ -17,7 +17,7 @@ public sealed class CreateOrUpdateTopicTest : BaseWriteOnlyClassFixture
     {
         // Act
         CreateOrUpdateTopic.Command command = new(
-            CurrentUserId: "1",
+            CurrentUserId: 1,
             TopicId: null,
             new CreateOrUpdateTopic.RequestDto(
                 new CreateOrUpdateTopic.TopicDto(
@@ -39,7 +39,7 @@ public sealed class CreateOrUpdateTopicTest : BaseWriteOnlyClassFixture
     {
         // Act && Arrange
         CreateOrUpdateTopic.Command commandCreate = new(
-            CurrentUserId: "1",
+            CurrentUserId: 1,
             TopicId: null,
             new CreateOrUpdateTopic.RequestDto(
                 new CreateOrUpdateTopic.TopicDto(
@@ -49,7 +49,7 @@ public sealed class CreateOrUpdateTopicTest : BaseWriteOnlyClassFixture
         long topicCreatedId = await _mediator.Send(commandCreate);
 
         CreateOrUpdateTopic.Command commandUpdate = new(
-            CurrentUserId: "1",
+            CurrentUserId: 1,
             TopicId: topicCreatedId,
             new CreateOrUpdateTopic.RequestDto(
                 new CreateOrUpdateTopic.TopicDto(

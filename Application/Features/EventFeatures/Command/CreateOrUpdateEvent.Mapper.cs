@@ -7,7 +7,7 @@ public static partial class CreateOrUpdateEvent
     [Mapper]
     public static partial class Mapper
     {
-        public static Event Map(EventDto source, string userId, long? topicId) => new()
+        public static Event Map(EventDto source, long userId, long? topicId) => new()
         {
             Name = source.Name,
             Description = source.Description,
@@ -23,7 +23,7 @@ public static partial class CreateOrUpdateEvent
             TopicId = topicId
         };
 
-        public static void Map(Event destination, EventDto source, string userId, long? topicId)
+        public static void Map(Event destination, EventDto source, long userId, long? topicId)
         {
             destination.Name = source.Name;
             destination.Description = source.Description;

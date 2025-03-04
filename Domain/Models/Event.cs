@@ -57,7 +57,7 @@ public class Event : EntityBase, IEntityState
     /// <summary>
     /// Идентификатор пользователя
     /// </summary>
-    public required string UserId { get; set; }
+    public required long UserId { get; set; }
 
     /// <summary>
     /// Событие удалено

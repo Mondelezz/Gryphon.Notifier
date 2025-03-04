@@ -13,7 +13,7 @@ public sealed class GetListEventTest : BaseReadonlyClassFixture
     {
         // Arrange
         GetListEvent.Query query = new(
-            UserId: "1",
+            UserId: 1,
             Offset: 10,
             SkipCount: 0,
             Sorting: GetListEvent.Sorting.Id,
@@ -33,7 +33,7 @@ public sealed class GetListEventTest : BaseReadonlyClassFixture
     {
         // Arrange
         GetListEvent.Query query = new(
-            UserId: "1",
+            UserId: 1,
             Offset: 10,
             SkipCount: 0,
             Sorting: GetListEvent.Sorting.Id,
@@ -53,7 +53,7 @@ public sealed class GetListEventTest : BaseReadonlyClassFixture
     {
         // Arrange
         GetListEvent.Query query = new(
-            UserId: "1",
+            UserId: 1,
             Offset: 10,
             SkipCount: 0,
             Sorting: GetListEvent.Sorting.Id,
@@ -73,7 +73,7 @@ public sealed class GetListEventTest : BaseReadonlyClassFixture
     {
         // Arrange
         GetListEvent.Query query = new(
-            UserId: "1",
+            UserId: 1,
             Offset: 10,
             SkipCount: 0,
             Sorting: GetListEvent.Sorting.Id,
@@ -93,7 +93,7 @@ public sealed class GetListEventTest : BaseReadonlyClassFixture
     {
         // Arrange
         GetListEvent.Query query = new(
-            UserId: "1",
+            UserId: 1,
             Offset: 10,
             SkipCount: 0,
             Sorting: GetListEvent.Sorting.Id,
@@ -113,7 +113,7 @@ public sealed class GetListEventTest : BaseReadonlyClassFixture
     {
         // Arrange
         GetListEvent.Query query = new(
-            UserId: "1",
+            UserId: 1,
             Offset: 10,
             SkipCount: 0,
             Sorting: GetListEvent.Sorting.Id,
@@ -133,7 +133,7 @@ public sealed class GetListEventTest : BaseReadonlyClassFixture
     {
         // Arrange
         GetListEvent.Query query = new(
-            UserId: "1",
+            UserId: 1,
             Offset: 10,
             SkipCount: 0,
             Sorting: GetListEvent.Sorting.Id,

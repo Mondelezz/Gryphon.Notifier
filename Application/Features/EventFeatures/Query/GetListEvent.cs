@@ -13,7 +13,7 @@ namespace Application.Features.EventFeatures.Query;
 public static partial class GetListEvent
 {
     public record Query(
-            string UserId,
+            long UserId,
             int Offset,
             int SkipCount,
             Sorting Sorting,

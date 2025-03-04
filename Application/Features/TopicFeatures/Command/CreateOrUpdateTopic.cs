@@ -11,7 +11,7 @@ namespace Application.Features.TopicFeatures.Command;
 public static partial class CreateOrUpdateTopic
 {
     public record Command(
-        string CurrentUserId,
+        long CurrentUserId,
         long? TopicId,
         RequestDto RequestDto) : ICommandRequest<long>;
 

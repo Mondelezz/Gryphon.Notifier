@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(MigrationDbContext))]
-    [Migration("20250201113923_init")]
+    [Migration("20250304174122_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.Models.Event.Event", b =>
+            modelBuilder.Entity("Domain.Models.Event", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -43,9 +43,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
-
-                    b.Property<long?>("GroupEventId")
-                        .HasColumnType("bigint");
 
                     b.Property<string>("Importance")
                         .IsRequired()
@@ -67,29 +64,31 @@ namespace Infrastructure.Migrations
                     b.Property<decimal?>("Price")
                         .HasColumnType("numeric");
 
-                    b.Property<DateTime?>("TimeEventEnded")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<TimeOnly?>("TimeEventEnded")
+                        .HasColumnType("time without time zone");
 
-                    b.Property<DateTime?>("TimeEventStart")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<TimeOnly?>("TimeEventStart")
+                        .HasColumnType("time without time zone");
+
+                    b.Property<long?>("TopicId")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("UpdateDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("timezone('utc', current_timestamp)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GroupEventId");
+                    b.HasIndex("TopicId");
 
                     b.ToTable("Events");
                 });
 
-            modelBuilder.Entity("Domain.Models.Event.GroupEvent", b =>
+            modelBuilder.Entity("Domain.Models.Topic", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -102,14 +101,14 @@ namespace Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("timezone('utc', current_timestamp)");
 
-                    b.Property<string>("GroupEventType")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("TopicType")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -118,25 +117,24 @@ namespace Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("timezone('utc', current_timestamp)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
-                    b.ToTable("GroupEvents");
+                    b.ToTable("Topics");
                 });
 
-            modelBuilder.Entity("Domain.Models.Event.Event", b =>
+            modelBuilder.Entity("Domain.Models.Event", b =>
                 {
-                    b.HasOne("Domain.Models.Event.GroupEvent", "GroupEvent")
+                    b.HasOne("Domain.Models.Topic", "Topic")
                         .WithMany("Events")
-                        .HasForeignKey("GroupEventId");
+                        .HasForeignKey("TopicId");
 
-                    b.Navigation("GroupEvent");
+                    b.Navigation("Topic");
                 });
 
-            modelBuilder.Entity("Domain.Models.Event.GroupEvent", b =>
+            modelBuilder.Entity("Domain.Models.Topic", b =>
                 {
                     b.Navigation("Events");
                 });
