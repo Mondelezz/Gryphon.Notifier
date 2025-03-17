@@ -23,4 +23,9 @@
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\AuthFeatures\Query\" />
+    <Folder Include="Features\AuthFeatures\Command\" />
+  </ItemGroup>
+
 </Project>
