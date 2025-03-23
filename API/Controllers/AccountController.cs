@@ -17,14 +17,13 @@ namespace API.Controllers;
 public class AccountController(
     LinkGenerator linkGenerator,
     SignInManager<User> signManager,
-    HttpContext httpContext,
     IMediator mediator) : ControllerBase
 {
     [HttpGet("login/google")]
     public IResult SigninGoogle([FromQuery] string returnUrl)
     {
         AuthenticationProperties authProp = signManager.ConfigureExternalAuthenticationProperties("Google",
-            linkGenerator.GetPathByName(httpContext, "GoogleLoginCallback")
+            linkGenerator.GetPathByName(HttpContext, "GoogleLoginCallback")
             + $"?returnUrl={returnUrl}");
 
         // Сообщает middleware, что нужно запустить процесс входа с помощью Google,
@@ -33,6 +32,7 @@ public class AccountController(
     }
 
     [HttpGet("login/google/callback")]
+    [ActionName("GoogleLoginCallback")]
     public async Task<IResult> GoogleLoginCallback([FromQuery] string returnUrl)
     {
         AuthenticateResult authenticateResult = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);

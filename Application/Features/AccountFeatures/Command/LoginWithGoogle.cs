@@ -4,7 +4,7 @@ using Application.Common;
 
 using Mediator;
 
-using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Identity;
 
 namespace Application.Features.AccountFeatures.Command;
 
@@ -14,11 +14,11 @@ namespace Application.Features.AccountFeatures.Command;
 public static class LoginWithGoogle
 {
     public record Command(
-        ClaimsPrincipal? ClaimsPrincipal) : ICommandRequest<string>;
+        ClaimsPrincipal? ClaimsPrincipal) : ICommandRequest<long>;
 
-    public class Handler(UserManager<User> userManager) : IRequestHandler<Command, string>
+    public class Handler(UserManager<User> userManager) : IRequestHandler<Command, long>
     {
-        public async ValueTask<string> Handle(Command request, CancellationToken cancellationToken)
+        public async ValueTask<long> Handle(Command request, CancellationToken cancellationToken)
         {
             ClaimsPrincipal claims = request.ClaimsPrincipal ??
                 throw new ExternalLoginProviderException("Google", "ClaimsPrincipal is null");
@@ -31,9 +31,10 @@ public static class LoginWithGoogle
 
             UserLoginInfo info = new(
                 "Google",
-                request.ClaimsPrincipal.FindFirstValue(ClaimTypes.Email) ?? string.Empty);
+                request.ClaimsPrincipal.FindFirstValue(ClaimTypes.Email) ?? string.Empty,
+                "Google");
 
-            IdentityResult loginResult = await userManager.AddLoginAsync(user.Id, info);
+            IdentityResult loginResult = await userManager.AddLoginAsync(user, info);
 
             if (!loginResult.Succeeded)
             {

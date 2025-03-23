@@ -2,11 +2,16 @@ using Microsoft.OpenApi.Models;
 using Infrastructure;
 using Application;
 using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Domain.Models;
+using API.Options;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using GoogleOptions = API.Options.GoogleOptions;
+using Infrastructure.DbContexts;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace API;
 
@@ -57,26 +62,38 @@ internal static class HostingExtensions
             options.CustomSchemaIds(type => type.FullName?.Replace("+", "_"));
         });
 
-        GoogleOptions? googleOptions = builder.Configuration
-            .GetSection(nameof(GoogleOptions))
-            .Get<GoogleOptions>();
+        builder.Services.AddIdentity<User, IdentityRole<long>>(opt =>
+        {
+            opt.Password.RequireDigit = true;
+            opt.Password.RequireLowercase = true;
+            opt.Password.RequireNonAlphanumeric = true;
+            opt.Password.RequireUppercase = true;
+            opt.Password.RequiredLength = 8;
+            opt.User.RequireUniqueEmail = true;
+        }).AddEntityFrameworkStores<CommandDbContext>().AddDefaultTokenProviders();
 
         builder.Services
             .AddAuthentication(options =>
             {
-                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             })
+            .AddCookie()
             .AddGoogle(options =>
             {
-                string clientId = googleOptions?.ClientId ?? string.Empty;
+                GoogleOptions googleOptions = builder.Configuration
+                .GetSection(nameof(GoogleOptions))
+                .Get<GoogleOptions>() ?? throw new ArgumentException(nameof(GoogleOptions));
+
+                string clientId = googleOptions.ClientId ?? string.Empty;
 
                 if (string.IsNullOrEmpty(clientId))
                 {
                     throw new ArgumentNullException(clientId, "is null or empty");
                 }
 
-                string clientSecret = googleOptions?.ClientSecret ?? string.Empty;
+                string clientSecret = googleOptions.ClientSecret ?? string.Empty;
 
                 if (string.IsNullOrEmpty(clientSecret))
                 {
@@ -85,12 +102,35 @@ internal static class HostingExtensions
 
                 options.ClientId = clientId;
                 options.ClientSecret = clientSecret;
-                options.SignInScheme = IdentityConstants.ExternalScheme;
-                options.ClaimActions.MapJsonKey("urn:google:picture", "picture", "url"); // для получения изображения пользователя
-            });
+                options.ClaimActions.MapJsonKey("urn:google:picture", "picture", "url");
+                options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            })
+             .AddJwtBearer(options =>
+             {
+                 JwtOptions jwtOptions = builder.Configuration.GetSection(JwtOptions.JwtOptionsKey)
+                         .Get<JwtOptions>() ?? throw new ArgumentException(nameof(JwtOptions));
 
-        builder.Services.AddIdentity<User, IdentityRole>()
-            .Add;
+                 options.TokenValidationParameters = new TokenValidationParameters
+                 {
+                     ValidateIssuer = true,
+                     ValidateAudience = true,
+                     ValidateLifetime = true,
+                     ValidateIssuerSigningKey = true,
+                     ValidIssuer = jwtOptions.Issuer,
+                     ValidAudience = jwtOptions.Audience,
+                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Secret))
+                 };
+
+                 options.Events = new JwtBearerEvents
+                 {
+                     OnMessageReceived = context =>
+                     {
+                         context.Token = context.Request.Cookies["ACCESS_TOKEN"];
+                         return Task.CompletedTask;
+                     }
+                 };
+             });
+
 
         builder.Configuration
             .SetBasePath(AppContext.BaseDirectory)
@@ -126,7 +166,7 @@ internal static class HostingExtensions
 
         app.UseAuthorization();
 
-        app.MapControllers();
+        app.UseEndpoints(endpoints => endpoints.MapControllers());
 
         return app;
     }

@@ -1,13 +1,13 @@
 using Domain.Common;
 
-using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Models;
 
 /// <summary>
 /// Пользователь
 /// </summary>
-public class User : IdentityUser, IEntityDate
+public class User : IdentityUser<long>, IEntityDate
 {
     public DateTime CreateDate { get; set; }
 
