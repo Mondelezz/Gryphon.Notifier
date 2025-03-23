@@ -2,6 +2,11 @@ using Microsoft.OpenApi.Models;
 using Infrastructure;
 using Application;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Domain.Models;
 
 namespace API;
 
@@ -9,6 +14,22 @@ internal static class HostingExtensions
 {
     public static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
     {
+        builder.Services.AddHttpContextAccessor();
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("CorsPolicy", policy =>
+            {
+                policy
+                .WithOrigins("http://localhost:5173")
+                .AllowCredentials()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+            });
+        });
+
+        builder.Services.Configure<GoogleOptions>(builder.Configuration.GetSection("GoogleOptions"));
+
         builder.Services.AddControllers()
             .AddJsonOptions(options =>
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter())); // Конвертирует enum в string
@@ -31,10 +52,45 @@ internal static class HostingExtensions
             foreach (string xmlFile in Directory.GetFiles(AppContext.BaseDirectory, "*.xml", SearchOption.AllDirectories))
             {
                 options.IncludeXmlComments(xmlFile, true);
-            };
+            }
 
             options.CustomSchemaIds(type => type.FullName?.Replace("+", "_"));
         });
+
+        GoogleOptions? googleOptions = builder.Configuration
+            .GetSection(nameof(GoogleOptions))
+            .Get<GoogleOptions>();
+
+        builder.Services
+            .AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+            })
+            .AddGoogle(options =>
+            {
+                string clientId = googleOptions?.ClientId ?? string.Empty;
+
+                if (string.IsNullOrEmpty(clientId))
+                {
+                    throw new ArgumentNullException(clientId, "is null or empty");
+                }
+
+                string clientSecret = googleOptions?.ClientSecret ?? string.Empty;
+
+                if (string.IsNullOrEmpty(clientSecret))
+                {
+                    throw new ArgumentNullException(clientSecret, "is null or empty");
+                }
+
+                options.ClientId = clientId;
+                options.ClientSecret = clientSecret;
+                options.SignInScheme = IdentityConstants.ExternalScheme;
+                options.ClaimActions.MapJsonKey("urn:google:picture", "picture", "url"); // для получения изображения пользователя
+            });
+
+        builder.Services.AddIdentity<User, IdentityRole>()
+            .Add;
 
         builder.Configuration
             .SetBasePath(AppContext.BaseDirectory)
@@ -58,7 +114,13 @@ internal static class HostingExtensions
             app.UseMiddleware<GlobalErrorHandlingMiddleware>();
         }
 
+        app.UseHttpsRedirection();
+
+        app.UseStaticFiles();
+
         app.UseRouting();
+
+        app.UseCors("CorsPolicy");
 
         app.UseAuthentication();
 

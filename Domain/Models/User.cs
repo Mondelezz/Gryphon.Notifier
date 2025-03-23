@@ -1,20 +1,25 @@
 using Domain.Common;
 
+using Microsoft.AspNet.Identity.EntityFramework;
+
 namespace Domain.Models;
 
 /// <summary>
 /// Пользователь
 /// </summary>
-public class User : EntityBase
+public class User : IdentityUser, IEntityDate
 {
-    /// <summary>
-    /// Email пользователя (для консистентности данных и единого аккуанта среди различных провайдеров аутентификации)
-    /// Email необходимо подтвердить
-    /// </summary>
-    public required string Email { get; set; }
+    public DateTime CreateDate { get; set; }
+
+    public DateTime UpdateDate { get; set; }
 
     /// <summary>
-    /// Провайдеры, через которые авторизовался пользователь
+    /// Имя
     /// </summary>
-    public IList<ExternalIdentity> ExternalIdentities { get; set; } = [];
+    public required string FirstName { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Фамилия
+    /// </summary>
+    public required string LastName { get; set; } = string.Empty;
 }
