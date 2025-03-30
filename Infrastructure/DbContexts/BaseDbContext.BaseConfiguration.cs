@@ -3,27 +3,29 @@ using Domain.Models;
 
 using Infrastructure.Configuration;
 
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Infrastructure.DbContexts;
 
-public abstract partial class BaseDbContext(DbContextOptions options) : DbContext(options)
+public abstract partial class BaseDbContext(DbContextOptions options) : IdentityDbContext<User, IdentityRole<long>, long>(options)
 {
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder builder)
     {
-        base.OnModelCreating(modelBuilder);
-        EntityDateConfigure(modelBuilder);
+        base.OnModelCreating(builder);
+        EntityDateConfigure(builder);
 
-        modelBuilder.Entity<Event>()
+        builder.Entity<Event>()
             .Property(e => e.Importance)
             .HasConversion<string>();
 
-        modelBuilder.Entity<Topic>()
+        builder.Entity<Topic>()
             .Property(e => e.TopicType)
             .HasConversion<string>();
 
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(BaseConfiguration<>).Assembly);
+        builder.ApplyConfigurationsFromAssembly(typeof(BaseConfiguration<>).Assembly);
     }
 
     private static void EntityDateConfigure(ModelBuilder modelBuilder)

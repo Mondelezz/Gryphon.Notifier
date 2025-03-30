@@ -12,6 +12,7 @@ using System.Text;
 using GoogleOptions = API.Options.GoogleOptions;
 using Infrastructure.DbContexts;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OAuth;
 
 namespace API;
 
