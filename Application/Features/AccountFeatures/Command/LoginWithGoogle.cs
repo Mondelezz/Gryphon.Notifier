@@ -18,28 +18,35 @@ public static class LoginWithGoogle
 
     public class Handler(UserManager<User> userManager) : IRequestHandler<Command, long>
     {
+        private const string ProviderName = "Google";
+
         public async ValueTask<long> Handle(Command request, CancellationToken cancellationToken)
         {
             ClaimsPrincipal claims = request.ClaimsPrincipal ??
-                throw new ExternalLoginProviderException("Google", "ClaimsPrincipal is null");
+                throw new ExternalLoginProviderException(ProviderName, "ClaimsPrincipal is null");
 
             string email = claims.FindFirstValue(ClaimTypes.Email) ??
-                throw new ExternalLoginProviderException("Google", "Email is null");
+                throw new ExternalLoginProviderException(ProviderName, "Email is null");
 
             User user = await userManager.FindByEmailAsync(email) ??
                 await CreateAsync(claims, email);
 
             UserLoginInfo info = new(
-                "Google",
+                ProviderName,
                 request.ClaimsPrincipal.FindFirstValue(ClaimTypes.Email) ?? string.Empty,
-                "Google");
+                ProviderName);
 
-            IdentityResult loginResult = await userManager.AddLoginAsync(user, info);
+            bool loginProviderExists = await LoginProviderExistsAsync(info.LoginProvider, info.ProviderKey);
 
-            if (!loginResult.Succeeded)
+            if (!loginProviderExists)
             {
-                throw new ExternalLoginProviderException("Google",
-                    $"Unable to login user: {string.Join(", ", loginResult.Errors)}");
+                IdentityResult loginResult = await userManager.AddLoginAsync(user, info);
+
+                if (!loginResult.Succeeded)
+                {
+                    throw new ExternalLoginProviderException(ProviderName,
+                        $"Unable to login user: {string.Join(", ", loginResult.Errors)}");
+                }
             }
 
             return user.Id;
@@ -67,11 +74,17 @@ public static class LoginWithGoogle
 
             if (!result.Succeeded)
             {
-                throw new ExternalLoginProviderException("Google",
+                throw new ExternalLoginProviderException(ProviderName,
                     $"Unable to create user: {string.Join(", ", result.Errors)}");
             }
 
             return newUser;
+        }
+
+        private async Task<bool> LoginProviderExistsAsync(string loginProvider, string providerKey)
+        {
+            User? user = await userManager.FindByLoginAsync(loginProvider, providerKey);
+            return user != null;
         }
     }
 }

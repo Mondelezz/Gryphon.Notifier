@@ -31,7 +31,6 @@ public class AccountController(
     }
 
     [HttpGet("login/google/callback")]
-    [ActionName("GoogleLoginCallback")]
     public async Task<IResult> GoogleLoginCallback([FromQuery] string returnUrl)
     {
         AuthenticateResult authenticateResult = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
