@@ -31,7 +31,6 @@ internal class UserConfiguration : BaseConfiguration<User>
                 .HasForeignKey(ut => ut.UserId)
                 .IsRequired();
 
-
         builder.HasMany<IdentityUserRole<long>>()
                 .WithOne()
                 .HasForeignKey(ur => ur.RoleId)

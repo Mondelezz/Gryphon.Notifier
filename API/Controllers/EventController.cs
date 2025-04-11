@@ -1,23 +1,24 @@
 using Microsoft.AspNetCore.Mvc;
-using Mediator;
 using Application.Features.EventFeatures.Query;
 using Application.Features.EventFeatures.Command;
 using System.ComponentModel.DataAnnotations;
+using Application.Interfaces;
+using Application.Features.TopicFeatures.Query;
 
 namespace API.Controllers;
 
 /// <summary>
 /// Отвечает за работу с событиями
 /// </summary>
-/// <param name="mediator">IMediator</param>
+/// <param name="eventService">eventService</param>
 [Route("api/v1/event")]
 [ApiController]
-public class EventController(IMediator mediator) : ControllerBase
+public class EventController(IEventService eventService) : ControllerBase
 {
     /// <summary>
     /// Создание или редактирование события
     /// </summary>
-    /// <param name="requestDto">Событие</param>
+    /// <param name="eventDto">Событие</param>
     /// <param name="eventId">Идентификатор события</param>
     /// <param name="topicId">Идентификатор топика, в котором создаётся событие</param>
     /// <param name="currentUserId">Идентификатор текущего пользователя</param>
@@ -25,12 +26,16 @@ public class EventController(IMediator mediator) : ControllerBase
     /// <returns>Идентификатор созданной или обновлённой сущности</returns>
     [HttpPost("create-or-update-event")]
     public async Task<ActionResult<long>> CreateOrUpdateEventAsync(
-        CreateOrUpdateEvent.RequestDto requestDto,
+        CreateOrUpdateEvent.EventDto eventDto,
         long? eventId,
         long? topicId,
         long currentUserId,
-        CancellationToken cancellationToken = default) => await mediator.Send(
-            new CreateOrUpdateEvent.Command(requestDto, eventId, topicId, currentUserId), cancellationToken);
+        CancellationToken cancellationToken = default) => await eventService.CreateOrUpdateEventAsync(
+            eventDto,
+            eventId,
+            topicId,
+            currentUserId,
+            cancellationToken);
 
     /// <summary>
     /// Добавляет событие в топик
@@ -39,17 +44,17 @@ public class EventController(IMediator mediator) : ControllerBase
     /// <param name="topicId">Идентификатор топика, куда следует переместить событие</param>
     /// <param name="eventId">Идентификатор события</param>
     /// <param name="cancellationToken">Токен отмены</param>
-    /// <returns>Идентификатор добавленного события</returns>
+    /// <returns>Топик</returns>
     [HttpPost("add-event-to-topic")]
-    public async Task<ActionResult<long>> AddEventToTopic(
+    public async Task<ActionResult<GetTopic.ResponseDto>> AddEventToTopic(
         long currentUserId,
         long topicId,
         long eventId,
-        CancellationToken cancellationToken = default) => await mediator.Send(
-            new AddEventToTopic.Command(
-                currentUserId,
-                topicId,
-                eventId), cancellationToken);
+        CancellationToken cancellationToken = default) => await eventService.AddEventToTopicAsync(
+            currentUserId,
+            topicId,
+            eventId,
+            cancellationToken);
 
     /// <summary>
     /// Получение события по идентификатору
@@ -62,8 +67,10 @@ public class EventController(IMediator mediator) : ControllerBase
     public async Task<GetEvent.ResponseDto> GetEventAsync(
         long currentUserId,
         long eventId,
-        CancellationToken cancellationToken = default) => await mediator.Send(
-            new GetEvent.Query(currentUserId, eventId), cancellationToken);
+        CancellationToken cancellationToken = default) => await eventService.GetEventAsync(
+            currentUserId,
+            eventId,
+            cancellationToken);
 
     /// <summary>
     /// Получение списка событий с возможностью филтрации, сортировки и пагинации
@@ -84,11 +91,12 @@ public class EventController(IMediator mediator) : ControllerBase
         [FromQuery] GetListEvent.Sorting sorting = GetListEvent.Sorting.DateEvent,
         [FromQuery] bool sortByDescending = false,
         [FromQuery] GetListEvent.RequestFilter? requestFilter = default,
-        CancellationToken cancellationToken = default) => await mediator.Send(
-            new GetListEvent.Query(
-                currentUserId,
-                offset, skipCount,
-                sorting,
-                sortByDescending,
-                requestFilter), cancellationToken);
+        CancellationToken cancellationToken = default) => await eventService.GetListEventAsync(
+            currentUserId,
+            offset,
+            skipCount,
+            sorting,
+            sortByDescending,
+            requestFilter,
+            cancellationToken);
 }

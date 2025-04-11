@@ -1,8 +1,7 @@
-using Application.Behaviors;
+using Application.Interfaces;
+using Application.Services;
 
 using FluentValidation;
-
-using Mediator;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,11 +11,11 @@ public static class DependencyInjection
 {
     public static IServiceCollection RegisterApplicationLayer(this IServiceCollection services)
     {
-        services.AddMediator(options => options.ServiceLifetime = ServiceLifetime.Scoped);
-
         services.AddValidatorsFromAssemblyContaining(typeof(DependencyInjection), ServiceLifetime.Transient, includeInternalTypes: true);
 
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+        services.AddScoped<IFileDataService, FileDataService>();
+        services.AddScoped<ITopicService, TopicService>();
+        services.AddScoped<IEventService, EventService>();
 
         return services;
     }

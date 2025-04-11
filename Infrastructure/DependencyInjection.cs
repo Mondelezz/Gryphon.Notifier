@@ -5,7 +5,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+using Application.Options;
+using Minio;
+
 using Npgsql;
+using Application.Interfaces;
+using Infrastructure.Repository;
+using Domain.Interfaces;
 
 namespace Infrastructure;
 
@@ -16,6 +22,13 @@ public static class DependencyInjection
         IConfiguration configuration,
         IHostEnvironment environment)
     {
+        services.Configure<S3Options>(
+            configuration.GetSection("S3Options"));
+
+        S3Options s3Options = configuration
+                .GetSection(nameof(S3Options))
+                .Get<S3Options>() ?? throw new ArgumentException(nameof(S3Options));
+
         string connectionString = configuration.GetConnectionString("DefaultConnection")
             ?? throw new NullReferenceException("ConnectionString to database is null");
 
@@ -44,6 +57,15 @@ public static class DependencyInjection
                 opt.MigrationsAssembly(typeof(MigrationDbContext).Assembly.GetName().Name);
             });
         });
+
+        services.AddMinio(opt => opt
+           .WithEndpoint(s3Options.Endpoint)
+           .WithSSL(false)
+           .WithCredentials(s3Options.AccessKey, s3Options.SecretKey));
+
+        services.AddScoped<IFileDataRepository, FileDataRepository>();
+        services.AddScoped<IEventRepository, EventRepository>();
+        services.AddScoped<ITopicRepository, TopicRepository>();
 
         return services;
     }

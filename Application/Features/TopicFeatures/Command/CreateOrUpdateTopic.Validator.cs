@@ -4,15 +4,8 @@ namespace Application.Features.TopicFeatures.Command;
 
 public static partial class CreateOrUpdateTopic
 {
-    public class Validator : AbstractValidator<Command>
+    public class Validator : AbstractValidator<RequestDto>
     {
-        public Validator()
-        {
-            RuleFor(u => u.RequestDto)
-                .NotNull()
-                .SetValidator(new ValidatorRequestDto());
-        }
-
         public class ValidatorRequestDto : AbstractValidator<RequestDto>
         {
             public ValidatorRequestDto()
