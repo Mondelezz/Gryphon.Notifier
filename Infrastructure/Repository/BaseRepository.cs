@@ -4,7 +4,7 @@ using Infrastructure.DbContexts;
 
 namespace Infrastructure.Repository;
 
-public class BaseRepository<T> : IBaseRepository<T> where T : class
+internal class BaseRepository<T> : IBaseRepository<T> where T : class
 {
     protected readonly CommandDbContext commandDbContext;
     protected readonly QueryDbContext queryDbContext;

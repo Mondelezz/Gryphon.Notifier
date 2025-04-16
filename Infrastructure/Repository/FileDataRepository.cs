@@ -6,7 +6,7 @@ using Infrastructure.DbContexts;
 
 namespace Infrastructure.Repository;
 
-public class FileDataRepository : BaseRepository<FileData>, IFileDataRepository
+internal class FileDataRepository : BaseRepository<FileData>, IFileDataRepository
 {
     public FileDataRepository(CommandDbContext commandDbContext, QueryDbContext queryDbContext) : base(commandDbContext, queryDbContext)
     {

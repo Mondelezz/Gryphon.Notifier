@@ -2,16 +2,16 @@ using Microsoft.OpenApi.Models;
 using Infrastructure;
 using Application;
 using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication;
-using Domain.Models;
 using API.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using GoogleOptions = API.Options.GoogleOptions;
-using Infrastructure.DbContexts;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Domain.Models;
+using Infrastructure.DbContexts;
+using Microsoft.AspNetCore.Identity;
 
 namespace API;
 
@@ -62,16 +62,6 @@ internal static class HostingExtensions
             options.CustomSchemaIds(type => type.FullName?.Replace("+", "_"));
         });
 
-        builder.Services.AddIdentity<User, IdentityRole<long>>(opt =>
-        {
-            opt.Password.RequireDigit = true;
-            opt.Password.RequireLowercase = true;
-            opt.Password.RequireNonAlphanumeric = true;
-            opt.Password.RequireUppercase = true;
-            opt.Password.RequiredLength = 8;
-            opt.User.RequireUniqueEmail = true;
-        }).AddEntityFrameworkStores<CommandDbContext>().AddDefaultTokenProviders();
-
         builder.Services
             .AddAuthentication(options =>
             {
@@ -102,7 +92,9 @@ internal static class HostingExtensions
 
                 options.ClientId = clientId;
                 options.ClientSecret = clientSecret;
+                options.SaveTokens = true;
                 options.ClaimActions.MapJsonKey("urn:google:picture", "picture", "url");
+                options.Scope.Add("offline_access"); // Для получения Refresh token
                 options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             })
              .AddJwtBearer(options =>
@@ -130,7 +122,6 @@ internal static class HostingExtensions
                      }
                  };
              });
-
 
         builder.Configuration
             .SetBasePath(AppContext.BaseDirectory)

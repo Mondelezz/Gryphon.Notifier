@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repository;
 
-public class TopicRepository : BaseRepository<Topic>, ITopicRepository
+internal class TopicRepository : BaseRepository<Topic>, ITopicRepository
 {
     public TopicRepository(CommandDbContext commandDbContext, QueryDbContext queryDbContext) : base(commandDbContext, queryDbContext)
     {

@@ -1,56 +1,49 @@
-//using Application.Features.AccountFeatures.Command;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-//using Domain.Models;
+using IAuthorizationService = Application.Interfaces.IAuthorizationService;
+namespace API.Controllers;
 
-//using Mediator;
+[ApiController]
+[Route("api/v1/[controller]")]
+public class AccountController(IAuthorizationService authorizationService) : ControllerBase
+{
+    [HttpGet("login/google")]
+    public IActionResult SigninGoogle([FromQuery] string returnUrl)
+    {
+        string? redirectUri = Url.Action(nameof(GoogleLoginCallback), "Account", new { ReturnUrl = returnUrl });
 
-//using Microsoft.AspNetCore.Authentication;
-//using Microsoft.AspNetCore.Authentication.Google;
-//using Microsoft.AspNetCore.Authorization;
-//using Microsoft.AspNetCore.Identity;
-//using Microsoft.AspNetCore.Mvc;
+        AuthenticationProperties properties = new()
+        {
+            RedirectUri = redirectUri
+        };
 
-//namespace API.Controllers;
+        return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+    }
 
-//[ApiController]
-//[Route("api/v1/[controller]")]
-//public class AccountController(
-//    SignInManager<User> signManager,
-//    IMediator mediator) : ControllerBase
-//{
-//    [HttpGet("login/google")]
-//    public IResult SigninGoogle([FromQuery] string returnUrl)
-//    {
-//        string? redirectUri = Url.Action(nameof(GoogleLoginCallback), "Account", new { ReturnUrl = returnUrl });
+    [HttpGet("login/google/callback")]
+    public async Task<IResult> GoogleLoginCallback([FromQuery] string returnUrl, CancellationToken cancellationToken = default)
+    {
+        AuthenticateResult authenticateResult = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
 
-//        AuthenticationProperties authProps = signManager.ConfigureExternalAuthenticationProperties("Google", redirectUri);
+        if (!authenticateResult.Succeeded)
+        {
+            return Results.Unauthorized();
+        }
 
-//        // Сообщает middleware, что нужно запустить процесс входа с помощью Google,
-//        // после ввода данных пользователь будет перенаправлен на GoogleLoginCallback
-//        return Results.Challenge(authProps, ["Google"]);
-//    }
+        await authorizationService.LoginWithGoogle(authenticateResult, cancellationToken);
 
-//    [HttpGet("login/google/callback")]
-//    public async Task<IResult> GoogleLoginCallback([FromQuery] string returnUrl)
-//    {
-//        AuthenticateResult authenticateResult = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+        return Results.Redirect(returnUrl);
+    }
 
-//        if (!authenticateResult.Succeeded)
-//        {
-//            return Results.Unauthorized();
-//        }
+    [Authorize]
+    [HttpGet("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync();
 
-//        await mediator.Send(new LoginWithGoogle.Command(authenticateResult.Principal));
-
-//        return Results.Redirect(returnUrl);
-//    }
-
-//    [Authorize]
-//    [HttpGet("logout")]
-//    public async Task<IActionResult> Logout()
-//    {
-//        await HttpContext.SignOutAsync();
-
-//        return Ok("Logged out");
-//    }
-//}
+        return Ok("Logged out");
+    }
+}

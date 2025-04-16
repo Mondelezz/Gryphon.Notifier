@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-
 using Application.Features.TopicFeatures.Command;
 using Application.Features.TopicFeatures.Query;
 using Application.Interfaces;

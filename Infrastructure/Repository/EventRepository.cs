@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repository;
 
-public class EventRepository : BaseRepository<Event>, IEventRepository
+internal class EventRepository : BaseRepository<Event>, IEventRepository
 {
     public EventRepository(CommandDbContext commandDbContext, QueryDbContext queryDbContext) : base(commandDbContext, queryDbContext)
     {

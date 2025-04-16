@@ -4,13 +4,12 @@ using Domain.Models;
 using Infrastructure.Configuration;
 
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Infrastructure.DbContexts;
 
-public abstract partial class BaseDbContext(DbContextOptions options) : IdentityDbContext<User, IdentityRole<long>, long>(options)
+public abstract partial class BaseDbContext(DbContextOptions options) : DbContext(options)
 {
     protected override void OnModelCreating(ModelBuilder builder)
     {

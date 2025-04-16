@@ -12,15 +12,15 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(MigrationDbContext))]
-    [Migration("20250323133002_UpdateUserDomain")]
-    partial class UpdateUserDomain
+    [Migration("20250416165054_DeletedRefreshTokenExpiriesAtFromUserLogin")]
+    partial class DeletedRefreshTokenExpiriesAtFromUserLogin
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.10")
+                .HasAnnotation("ProductVersion", "8.0.15")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -88,6 +88,40 @@ namespace Infrastructure.Migrations
                     b.ToTable("Events");
                 });
 
+            modelBuilder.Entity("Domain.Models.FileData", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreateDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("timezone('utc', current_timestamp)");
+
+                    b.Property<string>("FileHash")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("MimeType")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("timezone('utc', current_timestamp)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FileDatas");
+                });
+
             modelBuilder.Entity("Domain.Models.Topic", b =>
                 {
                     b.Property<long>("Id")
@@ -142,15 +176,13 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("boolean");
-
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsEmailConfirmed")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("UpdateDate")
@@ -167,6 +199,81 @@ namespace Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Domain.Models.UserLogin", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreateDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("timezone('utc', current_timestamp)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("LoginProvider")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("timezone('utc', current_timestamp)");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserLogins");
+                });
+
+            modelBuilder.Entity("Domain.Models.UserToken", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("AccessToken")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("AccessTokenExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("CreateDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("timezone('utc', current_timestamp)");
+
+                    b.Property<string>("RefreshToken")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("timezone('utc', current_timestamp)");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserTokens");
+                });
+
             modelBuilder.Entity("Domain.Models.Event", b =>
                 {
                     b.HasOne("Domain.Models.Topic", "Topic")
@@ -176,9 +283,34 @@ namespace Infrastructure.Migrations
                     b.Navigation("Topic");
                 });
 
+            modelBuilder.Entity("Domain.Models.UserLogin", b =>
+                {
+                    b.HasOne("Domain.Models.User", null)
+                        .WithMany("UserLogins")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Models.UserToken", b =>
+                {
+                    b.HasOne("Domain.Models.User", null)
+                        .WithMany("UserTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Domain.Models.Topic", b =>
                 {
                     b.Navigation("Events");
+                });
+
+            modelBuilder.Entity("Domain.Models.User", b =>
+                {
+                    b.Navigation("UserLogins");
+
+                    b.Navigation("UserTokens");
                 });
 #pragma warning restore 612, 618
         }
