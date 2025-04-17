@@ -63,11 +63,7 @@ public static class DependencyInjection
            .WithSSL(false)
            .WithCredentials(s3Options.AccessKey, s3Options.SecretKey));
 
-        services.AddScoped<IFileDataRepository, FileDataRepository>();
-        services.AddScoped<IEventRepository, EventRepository>();
-        services.AddScoped<ITopicRepository, TopicRepository>();
-        services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IUserLoginRepository, UserLoginRepository>();
+        RegisteringRepositories(services);
 
         return services;
     }
@@ -83,5 +79,15 @@ public static class DependencyInjection
         }
 
         return optionsBuilder;
+    }
+
+    private static void RegisteringRepositories(IServiceCollection services)
+    {
+        services.AddScoped<IFileDataRepository, FileDataRepository>();
+        services.AddScoped<IEventRepository, EventRepository>();
+        services.AddScoped<ITopicRepository, TopicRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IUserLoginRepository, UserLoginRepository>();
+        services.AddScoped<IUserTokenRepository, UserTokenRepository>();
     }
 }

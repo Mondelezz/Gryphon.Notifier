@@ -2,7 +2,7 @@ using Domain.Models;
 
 namespace Domain.Interfaces;
 
-public interface IUserLoginRepository
+public interface IUserLoginRepository : IBaseRepository<UserLogin>
 {
     Task<UserLogin?> FindByProviderNameAsync(string providerName, string email, CancellationToken cancellationToken);
 

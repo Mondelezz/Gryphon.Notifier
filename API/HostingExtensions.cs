@@ -94,7 +94,7 @@ internal static class HostingExtensions
                 options.ClientSecret = clientSecret;
                 options.SaveTokens = true;
                 options.ClaimActions.MapJsonKey("urn:google:picture", "picture", "url");
-                options.Scope.Add("offline_access"); // Для получения Refresh token
+                options.AccessType = "offline";
                 options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             })
              .AddJwtBearer(options =>

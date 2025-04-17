@@ -2,7 +2,7 @@ using Domain.Models;
 
 namespace Domain.Interfaces;
 
-public interface IUserRepository
+public interface IUserRepository : IBaseRepository<User>
 {
     Task<User?> FindByEmailAsync(string email, CancellationToken cancellationToken);
 

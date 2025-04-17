@@ -18,7 +18,9 @@ internal class UserRepository : BaseRepository<User>, IUserRepository
         try
         {
             await AddAsync(user, cancellationToken);
+
             await commandDbContext.SaveChangesAsync(cancellationToken);
+
             return true;
         }
         catch (Exception ex) when (ex is DbUpdateException or OperationCanceledException)

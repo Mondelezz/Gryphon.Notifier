@@ -13,11 +13,16 @@ public static class DependencyInjection
     {
         services.AddValidatorsFromAssemblyContaining(typeof(DependencyInjection), ServiceLifetime.Transient, includeInternalTypes: true);
 
+        RegisteringServices(services);
+
+        return services;
+    }
+
+    private static void RegisteringServices(IServiceCollection services)
+    {
         services.AddScoped<IFileDataService, FileDataService>();
         services.AddScoped<ITopicService, TopicService>();
         services.AddScoped<IEventService, EventService>();
         services.AddScoped<IAuthorizationService, AuthorizationService>();
-
-        return services;
     }
 }
