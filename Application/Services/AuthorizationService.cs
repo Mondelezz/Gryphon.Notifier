@@ -1,14 +1,15 @@
 using System.Security.Claims;
+using System.Text;
 using System.Transactions;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
 
+using Application.Features.AuthorizationFeatures.Command;
 using Application.Interfaces;
 
 using Domain.Interfaces;
 
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.EntityFrameworkCore;
-
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Application.Services;
 
@@ -27,7 +28,7 @@ public class AuthorizationService(
         string? RefreshToken,
         DateTime ExpiresAtUtc);
 
-    public async Task<long> LoginWithGoogle(AuthenticateResult authenticateResult, CancellationToken cancellationToken)
+    public async Task<LoginWithGoogle.ResponseDto> LoginWithGoogle(AuthenticateResult authenticateResult, CancellationToken cancellationToken)
     {
         AuthResult authResult = ValidateAuthResult(authenticateResult, ProviderName.Google);
 
@@ -56,7 +57,41 @@ public class AuthorizationService(
 
         scope.Complete();
 
-        return user.Id;
+        return new LoginWithGoogle.ResponseDto(Features.AuthorizationFeatures.Command.LoginWithGoogle.Mapper.Map(user));
+    }
+
+    public string GenerateJwtToken(
+        string issuer,
+        string audience,
+        string secret,
+        long userId,
+        string email,
+        string userName)
+    {
+        if (string.IsNullOrEmpty(issuer) || string.IsNullOrEmpty(audience) || string.IsNullOrEmpty(secret))
+        {
+            throw new JwtTokenException("JwtOptions is null");
+        }
+        Claim[] claims =
+        [
+            new Claim(ClaimTypes.Email, email),
+            new Claim(ClaimTypes.Name, userName),
+            new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        ];
+
+        SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(secret));
+        SigningCredentials credentials = new(key, SecurityAlgorithms.HmacSha256);
+
+        JwtSecurityToken token = new(
+            issuer: issuer,
+            audience: audience,
+            claims: claims,
+            expires: DateTime.UtcNow.AddMinutes(15),
+            signingCredentials: credentials
+        );
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
     private async Task<User> CreateUserAsync(

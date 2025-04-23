@@ -16,6 +16,7 @@
     <PackageReference Include="Microsoft.Extensions.Features" Version="8.0.15" />
     <PackageReference Include="Riok.Mapperly" Version="4.1.1" />
     <PackageReference Include="Minio" Version="6.0.4" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.8.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,7 +29,6 @@
     <Folder Include="Features\TopicFeatures\Query\" />
     <Folder Include="Features\TopicFeatures\Command\" />
     <Folder Include="Options\" />
-    <Folder Include="Exceptions\" />
     <Folder Include="Extensions\" />
   </ItemGroup>
 

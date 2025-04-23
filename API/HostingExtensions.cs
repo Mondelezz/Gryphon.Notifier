@@ -9,9 +9,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using GoogleOptions = API.Options.GoogleOptions;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Domain.Models;
-using Infrastructure.DbContexts;
-using Microsoft.AspNetCore.Identity;
 
 namespace API;
 
@@ -52,6 +49,31 @@ internal static class HostingExtensions
                     Email = "pankov.egor26032005@yandex.ru",
                     Name = "Mondelezz"
                 },
+            });
+
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT"
+            });
+
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
             });
 
             foreach (string xmlFile in Directory.GetFiles(AppContext.BaseDirectory, "*.xml", SearchOption.AllDirectories))
@@ -117,7 +139,7 @@ internal static class HostingExtensions
                  {
                      OnMessageReceived = context =>
                      {
-                         context.Token = context.Request.Cookies["ACCESS_TOKEN"];
+                         context.Token = context.Request.Cookies["Bearer_token"];
                          return Task.CompletedTask;
                      }
                  };
@@ -126,6 +148,8 @@ internal static class HostingExtensions
         builder.Configuration
             .SetBasePath(AppContext.BaseDirectory)
             .AddJsonFile(Path.Combine("appsettings.json"), optional: false, reloadOnChange: true);
+
+        builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOptions"));
 
         builder.Services.RegisterInfrastructureLayer(builder.Configuration, builder.Environment);
         builder.Services.RegisterApplicationLayer();

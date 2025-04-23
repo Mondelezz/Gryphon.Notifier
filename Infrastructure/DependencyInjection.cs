@@ -22,8 +22,7 @@ public static class DependencyInjection
         IConfiguration configuration,
         IHostEnvironment environment)
     {
-        services.Configure<S3Options>(
-            configuration.GetSection("S3Options"));
+        services.Configure<S3Options>(configuration.GetSection("S3Options"));
 
         S3Options s3Options = configuration
                 .GetSection(nameof(S3Options))

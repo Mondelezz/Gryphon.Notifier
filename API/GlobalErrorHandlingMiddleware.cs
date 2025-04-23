@@ -21,6 +21,10 @@ public class GlobalErrorHandlingMiddleware(RequestDelegate next, ILogger<GlobalE
         {
             await HandleExceptionAsync(HttpStatusCode.NotFound, context, ex);
         }
+        catch (JwtTokenException ex)
+        {
+            await HandleExceptionAsync(HttpStatusCode.NotFound, context, ex);
+        }
         catch (Exception ex)
         {
             await HandleExceptionAsync(HttpStatusCode.InternalServerError, context, ex);
