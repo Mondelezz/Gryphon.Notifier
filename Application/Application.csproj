@@ -16,6 +16,10 @@
     <PackageReference Include="Microsoft.Extensions.Features" Version="8.0.15" />
     <PackageReference Include="Riok.Mapperly" Version="4.1.1" />
     <PackageReference Include="Minio" Version="6.0.4" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="10.8.0.113526">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.8.0" />
   </ItemGroup>
 

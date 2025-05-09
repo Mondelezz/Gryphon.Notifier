@@ -35,18 +35,18 @@ public class AccountController : ControllerBase
     }
 
     [HttpGet("login/google/callback")]
-    public async Task<IResult> GoogleLoginCallback([FromQuery] string returnUrl, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GoogleLoginCallback(string returnUrl, CancellationToken cancellationToken = default)
     {
         AuthenticateResult authenticateResult = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
 
         if (!authenticateResult.Succeeded)
         {
-            return Results.Unauthorized();
+            return Redirect($"{returnUrl}?authFailed=true");
         }
 
         LoginWithGoogle.ResponseDto response = await _authorizationService.LoginWithGoogle(authenticateResult, cancellationToken);
 
-        string token = _authorizationService.GenerateJwtToken(
+        string authToken = _authorizationService.GenerateJwtToken(
             _jwtOptions.Issuer,
             _jwtOptions.Audience,
             _jwtOptions.Secret,
@@ -54,39 +54,22 @@ public class AccountController : ControllerBase
             response.UserDto.Email,
             response.UserDto.Username);
 
-        Response.Cookies.Append("Bearer_token", token, new CookieOptions
-        {
-            HttpOnly = true, // Запрещает доступ к куке через JavaScript (злоумышленник не сможет украсть токен через JS-код).
-            Secure = true, // Куки отправляются только по HTTPS
-            SameSite = SameSiteMode.None, // Защита от CSRF
-            Expires = DateTime.UtcNow.AddDays(7),
-            Path = "/"
-        });
-
-        return Results.Redirect(returnUrl);
+        return Redirect($"{returnUrl}?authToken={authToken}");
     }
 
     [HttpGet("check-auth")]
+    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     public IActionResult CheckAuth()
     {
         if (User.Identity?.IsAuthenticated == true)
         {
-            return Ok();
+            return Ok("Successful login");
         }
         return Unauthorized();
     }
 
     [Authorize]
+    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [HttpPost("logout")]
-    public IActionResult Logout()
-    {
-        Response.Cookies.Delete("Bearer_token", new CookieOptions
-        {
-            HttpOnly = true,
-            Secure = true,
-            SameSite = SameSiteMode.Strict
-        });
-
-        return Ok("Logged out");
-    }
+    public IActionResult Logout() => Ok("Logged out");
 }

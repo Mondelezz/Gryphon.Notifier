@@ -10,6 +10,7 @@ using Application.Interfaces;
 using Domain.Interfaces;
 
 using Microsoft.AspNetCore.Authentication;
+using System.Globalization;
 
 namespace Application.Services;
 
@@ -18,16 +19,20 @@ public class AuthorizationService(
     IUserLoginRepository userLoginRepository,
     IUserTokenRepository userTokenRepository) : IAuthorizationService
 {
-    internal static class ProviderName
+    private static class ProviderName
     {
         internal static string Google { get; } = "Google";
     }
 
-    internal record AuthResult(
-        string AccessToken,
-        string? RefreshToken,
-        DateTime ExpiresAtUtc);
+    private sealed record AuthResult(string AccessToken, string? RefreshToken, DateTime ExpiresAtUtc);
 
+    /// <summary>
+    /// Аутентификация через Google
+    /// </summary>
+    /// <param name="authenticateResult">Содержит данные, которые вернул Google</param>
+    /// <param name="cancellationToken">Токен отмены</param>
+    /// <returns>Данные о пользователе</returns>
+    /// <exception cref="ExternalLoginProviderException"></exception>
     public async Task<LoginWithGoogle.ResponseDto> LoginWithGoogle(AuthenticateResult authenticateResult, CancellationToken cancellationToken)
     {
         AuthResult authResult = ValidateAuthResult(authenticateResult, ProviderName.Google);
@@ -36,7 +41,7 @@ public class AuthorizationService(
                 throw new ExternalLoginProviderException(ProviderName.Google, "ClaimsPrincipal is null");
 
         string email = claims.FindFirstValue(ClaimTypes.Email) ??
-                throw new ExternalLoginProviderException(ProviderName.Google, "Email is null");
+                    throw new ExternalLoginProviderException(ProviderName.Google, "Email is null");
 
         using TransactionScope scope = new(TransactionScopeAsyncFlowOption.Enabled);
 
@@ -60,13 +65,18 @@ public class AuthorizationService(
         return new LoginWithGoogle.ResponseDto(Features.AuthorizationFeatures.Command.LoginWithGoogle.Mapper.Map(user));
     }
 
-    public string GenerateJwtToken(
-        string issuer,
-        string audience,
-        string secret,
-        long userId,
-        string email,
-        string userName)
+    /// <summary>
+    /// Генерирует JWT Token
+    /// </summary>
+    /// <param name="issuer">Издатель токена</param>
+    /// <param name="audience">Получатели, потребители токена</param>
+    /// <param name="secret">Секрет</param>
+    /// <param name="userId">Идентификатор пользователя</param>
+    /// <param name="email">Почта</param>
+    /// <param name="userName">Никнейм</param>
+    /// <returns>JWT Token</returns>
+    /// <exception cref="JwtTokenException"></exception>
+    public string GenerateJwtToken(string issuer, string audience, string secret, long userId, string email, string userName)
     {
         if (string.IsNullOrEmpty(issuer) || string.IsNullOrEmpty(audience) || string.IsNullOrEmpty(secret))
         {
@@ -94,6 +104,15 @@ public class AuthorizationService(
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="claims"></param>
+    /// <param name="email"></param>
+    /// <param name="providerName"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <exception cref="ExternalLoginProviderException"></exception>
     private async Task<User> CreateUserAsync(
         ClaimsPrincipal claims,
         string email,
@@ -120,6 +139,14 @@ public class AuthorizationService(
         return newUser;
     }
 
+    /// <summary>
+    /// Создаёт логин провайдер
+    /// </summary>
+    /// <param name="user">Пользователь</param>
+    /// <param name="providerName">Наименование провайдера</param>
+    /// <param name="cancellationToken">Токен отмены</param>
+    /// <returns>Логин-провайдер</returns>
+    /// <exception cref="ExternalLoginProviderException"></exception>
     private async Task<UserLogin> CreateUserLoginAsync(User user, string providerName, CancellationToken cancellationToken)
     {
         UserLogin userLogin = new()
@@ -140,6 +167,15 @@ public class AuthorizationService(
         return userLogin;
     }
 
+    /// <summary>
+    /// Добавляет токен доступа пользователя в бд
+    /// </summary>
+    /// <param name="authResult">Результат аутентификации</param>
+    /// <param name="userLogin">Логин-провайдер</param>
+    /// <param name="providerName">Наименование провайдера</param>
+    /// <param name="cancellationToken">Токен отмены</param>
+    /// <returns>UserToken</returns>
+    /// <exception cref="ExternalLoginProviderException"></exception>
     private async Task<UserToken> CreateUserTokenAsync(
         AuthResult authResult,
         UserLogin userLogin,
@@ -166,6 +202,15 @@ public class AuthorizationService(
         return userToken;
     }
 
+    /// <summary>
+    /// Обновляет токен доступа
+    /// </summary>
+    /// <param name="authResult">Данные для авторизации</param>
+    /// <param name="userId">Идентификатор пользователя</param>
+    /// <param name="userLoginId">Логин-провайдер пользователя</param>
+    /// <param name="cancellationToken">Токен отмены</param>
+    /// <returns></returns>
+    /// <exception cref="EntityNotFoundException"></exception>
     private async Task<UserToken> UpdateUserTokenAsync(
        AuthResult authResult,
        long userId,
@@ -181,23 +226,32 @@ public class AuthorizationService(
         return await userTokenRepository.UpdateAsync(userToken, cancellationToken);
     }
 
-    private async Task<UserLogin?> LoginProviderExistsAsync(string providerName, string email, CancellationToken cancellationToken) => await
-        userLoginRepository.FindByProviderNameAsync(providerName, email, cancellationToken);
+    /// <summary>
+    /// Проверяет, был ли уже залогинен пользователь с таким логин-провайдером
+    /// </summary>
+    /// <param name="providerName">Логин-провайдер</param>
+    /// <param name="email">Почта</param>
+    /// <param name="cancellationToken">Токен отмены</param>
+    /// <returns>UserLogin</returns>
+    private async Task<UserLogin?> LoginProviderExistsAsync(string providerName, string email, CancellationToken cancellationToken) =>
+        await userLoginRepository.FindByProviderNameAsync(providerName, email, cancellationToken);
 
-    private AuthResult ValidateAuthResult(AuthenticateResult authenticateResult, string providerName)
+    /// <summary>
+    /// Валидирует результат аутентификации
+    /// </summary>
+    /// <param name="authenticateResult">Результат аутентификации</param>
+    /// <param name="providerName">Наименование провайдера</param>
+    /// <returns>AuthResult</returns>
+    /// <exception cref="ExternalLoginProviderException"></exception>
+    private static AuthResult ValidateAuthResult(AuthenticateResult authenticateResult, string providerName)
     {
         string? accessToken = authenticateResult.Properties?.GetTokenValue("access_token");
         string? refreshToken = authenticateResult.Properties?.GetTokenValue("refresh_token");
-        string? expiresAt = authenticateResult.Properties?.GetTokenValue("expires_at");
+        DateTime expiresAtUtc = DateTime.Parse(authenticateResult.Properties.GetTokenValue("expires_at"), new CultureInfo("en-US"));
 
         if (string.IsNullOrEmpty(accessToken))
         {
             throw new ExternalLoginProviderException(providerName, "Access token token is missing.");
-        }
-
-        if (!DateTime.TryParse(expiresAt, out DateTime expiresAtUtc))
-        {
-            throw new ExternalLoginProviderException(providerName, "Invalid or missing expires_at.");
         }
 
         return new AuthResult(accessToken, refreshToken, expiresAtUtc.ToUniversalTime());

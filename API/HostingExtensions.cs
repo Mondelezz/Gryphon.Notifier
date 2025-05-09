@@ -72,7 +72,7 @@ internal static class HostingExtensions
                             Id = "Bearer"
                         }
                     },
-                    Array.Empty<string>()
+                    []
                 }
             });
 
@@ -98,14 +98,14 @@ internal static class HostingExtensions
                 .GetSection(nameof(GoogleOptions))
                 .Get<GoogleOptions>() ?? throw new ArgumentException(nameof(GoogleOptions));
 
-                string clientId = googleOptions.ClientId ?? string.Empty;
+                var clientId = googleOptions.ClientId ?? string.Empty;
 
                 if (string.IsNullOrEmpty(clientId))
                 {
                     throw new ArgumentNullException(clientId, "is null or empty");
                 }
 
-                string clientSecret = googleOptions.ClientSecret ?? string.Empty;
+                var clientSecret = googleOptions.ClientSecret ?? string.Empty;
 
                 if (string.IsNullOrEmpty(clientSecret))
                 {
@@ -133,15 +133,6 @@ internal static class HostingExtensions
                      ValidIssuer = jwtOptions.Issuer,
                      ValidAudience = jwtOptions.Audience,
                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Secret))
-                 };
-
-                 options.Events = new JwtBearerEvents
-                 {
-                     OnMessageReceived = context =>
-                     {
-                         context.Token = context.Request.Cookies["Bearer_token"];
-                         return Task.CompletedTask;
-                     }
                  };
              });
 
