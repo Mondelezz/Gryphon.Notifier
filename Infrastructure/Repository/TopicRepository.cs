@@ -22,9 +22,9 @@ internal class TopicRepository : BaseRepository<Topic>, ITopicRepository
         return topic;
     }
 
-    public async Task<Topic?> GetTopicByIdAsync(long topicId, long userId, CancellationToken cancellationToken) =>
+    public async Task<Topic?> GetTopicByIdAsync(long topicId, CancellationToken cancellationToken) =>
         await queryDbContext.Topics
-        .Where(t => t.UserId == userId && t.Id == topicId)
+        .Where(t => t.Id == topicId)
         .Include(t => t.Events.OrderByDescending(e => e.UpdateDate))
         .FirstOrDefaultAsync(cancellationToken);
 }

@@ -30,5 +30,5 @@ public interface ITopicService
     /// <param name="topicId">Идентификатор топика</param>
     /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>Топик и связанные с ним события</returns>
-    public Task<GetTopic.ResponseDto> GetTopicByIdAsync(long userId, long topicId, CancellationToken cancellationToken);
+    public Task<Topic> GetTopicByIdAsync(long userId, long topicId, CancellationToken cancellationToken);
 }

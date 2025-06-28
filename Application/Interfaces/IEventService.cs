@@ -33,7 +33,7 @@ public interface IEventService
     /// <param name="eventId">Идентификатор события</param>
     /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>Событие</returns>
-    public Task<GetEvent.ResponseDto> GetEventAsync(
+    public Task<Event> GetEventByIdAsync(
         long userId,
         long eventId,
         CancellationToken cancellationToken);

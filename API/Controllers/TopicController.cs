@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Application.Features.TopicFeatures.Command;
 using Application.Features.TopicFeatures.Query;
 using Application.Interfaces;
+using Domain.Models;
 
 namespace API.Controllers;
 
@@ -52,6 +53,10 @@ public class TopicController(ITopicService topicService) : ControllerBase
     public async Task<ActionResult<GetTopic.ResponseDto>> GetTopicAsync(
         long currentUserId,
         long topicId,
-        CancellationToken cancellationToken = default) =>
-        await topicService.GetTopicByIdAsync(currentUserId, topicId, cancellationToken);
+        CancellationToken cancellationToken = default)
+    {
+        Topic topic = await topicService.GetTopicByIdAsync(currentUserId, topicId, cancellationToken);
+
+        return Ok(new GetTopic.ResponseDto(GetTopic.Mapper.Map(topic)));
+    }
 }

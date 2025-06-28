@@ -1,6 +1,8 @@
 using Application.Exceptions;
+
 using System.Net;
 using System.Text.Json;
+
 using NullReferenceException = Application.Exceptions.NullReferenceException;
 
 namespace API;
@@ -15,7 +17,7 @@ public class GlobalErrorHandlingMiddleware(RequestDelegate next, ILogger<GlobalE
         }
         catch (NullReferenceException ex)
         {
-            await HandleExceptionAsync(HttpStatusCode.NotFound, context, ex);
+            await HandleExceptionAsync(HttpStatusCode.BadRequest, context, ex);
         }
         catch (EntityNotFoundException ex)
         {
@@ -23,7 +25,11 @@ public class GlobalErrorHandlingMiddleware(RequestDelegate next, ILogger<GlobalE
         }
         catch (JwtTokenException ex)
         {
-            await HandleExceptionAsync(HttpStatusCode.NotFound, context, ex);
+            await HandleExceptionAsync(HttpStatusCode.Unauthorized, context, ex);
+        }
+        catch (AccessException ex)
+        {
+            await HandleExceptionAsync(HttpStatusCode.Forbidden, context, ex);
         }
         catch (Exception ex)
         {

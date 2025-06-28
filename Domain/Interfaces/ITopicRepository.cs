@@ -16,8 +16,7 @@ public interface ITopicRepository : IBaseRepository<Topic>
     /// Получает сущность Topic по идентификатору
     /// </summary>
     /// <param name="topicId">Идентификатор топика</param>
-    /// <param name="userId">Идентификатор пользователя</param>
     /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>Данные топика</returns>
-    Task<Topic?> GetTopicByIdAsync(long topicId, long userId, CancellationToken cancellationToken);
+    Task<Topic?> GetTopicByIdAsync(long topicId, CancellationToken cancellationToken);
 }

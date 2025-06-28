@@ -9,11 +9,9 @@ namespace Application.Services;
 /// <summary>
 /// Базовый класс сервиса, содержащий приватные методы, используемые в частичных классах сервиса
 /// </summary>
-/// <param name="eventRepository">Репозиторий событий</param>
-/// <param name="topicRepository">Репозиторий топиков</param>
 public partial class EventService(
     IEventRepository eventRepository,
-    ITopicRepository topicRepository) : IEventService
+    ITopicService topicService) : IEventService
 {
     private static void ApplyFilters(
             GetListEvent.RequestFilter? filter,

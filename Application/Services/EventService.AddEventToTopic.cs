@@ -16,7 +16,7 @@ public partial class EventService
     /// <exception cref="InvalidDataException"></exception>
     public async Task<GetTopic.ResponseDto> AddEventToTopicAsync(long userId, long topicId, long eventId, CancellationToken cancellationToken)
     {
-        Event eventDb = await eventRepository.GetEventByIdAsync(userId, topicId, cancellationToken)
+        Event eventDb = await GetEventByIdAsync(userId, topicId, cancellationToken)
              ?? throw new EntityNotFoundException(eventId, userId, nameof(eventId), nameof(userId));
 
         if (eventDb.IsDeleted)
@@ -24,7 +24,7 @@ public partial class EventService
             throw new InvalidDataException("The event should not be deleted.");
         }
 
-        Topic topicDb = await topicRepository.GetTopicByIdAsync(topicId, userId, cancellationToken)
+        Topic topicDb = await topicService.GetTopicByIdAsync(userId, topicId, cancellationToken)
                 ?? throw new EntityNotFoundException(topicId, userId, nameof(topicId), nameof(userId));
 
         if (topicDb.IsDeleted)

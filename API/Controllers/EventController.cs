@@ -4,6 +4,7 @@ using Application.Features.EventFeatures.Command;
 using System.ComponentModel.DataAnnotations;
 using Application.Interfaces;
 using Application.Features.TopicFeatures.Query;
+using Domain.Models;
 
 namespace API.Controllers;
 
@@ -64,13 +65,18 @@ public class EventController(IEventService eventService) : ControllerBase
     /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>Событие</returns>
     [HttpGet("{eventId}")]
-    public async Task<GetEvent.ResponseDto> GetEventAsync(
+    public async Task<ActionResult<GetEvent.ResponseDto>> GetEventAsync(
         long currentUserId,
         long eventId,
-        CancellationToken cancellationToken = default) => await eventService.GetEventAsync(
+        CancellationToken cancellationToken = default)
+    {
+        Event eventDb = await eventService.GetEventByIdAsync(
             currentUserId,
             eventId,
             cancellationToken);
+
+        return Ok(new GetEvent.ResponseDto(GetEvent.Mapper.Map(eventDb)));
+    }
 
     /// <summary>
     /// Получение списка событий с возможностью филтрации, сортировки и пагинации

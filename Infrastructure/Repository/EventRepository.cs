@@ -22,9 +22,9 @@ internal class EventRepository : BaseRepository<Event>, IEventRepository
         return eventDb;
     }
 
-    public async Task<Event?> GetEventByIdAsync(long userId, long eventId, CancellationToken cancellationToken) =>
+    public async Task<Event?> GetEventByIdAsync(long eventId, CancellationToken cancellationToken) =>
         await queryDbContext.Events
-            .Where(e => e.UserId == userId && e.Id == eventId)
+            .Where(e => e.Id == eventId)
             .Include(e => e.Topic)
             .FirstOrDefaultAsync(cancellationToken);
 }

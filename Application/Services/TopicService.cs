@@ -22,7 +22,7 @@ public partial class TopicService(ITopicRepository topicRepository) : ITopicServ
 
     private async Task<long> UpdateTopicAsync(long userId, long topicId, CreateOrUpdateTopic.RequestDto request, CancellationToken cancellationToken)
     {
-        Topic topic = await topicRepository.GetTopicByIdAsync(topicId, userId, cancellationToken)
+        Topic topic = await GetTopicByIdAsync(userId, topicId, cancellationToken)
             ?? throw new EntityNotFoundException(topicId, userId, nameof(topicId), nameof(userId));
 
         // Обновление полей сущности
